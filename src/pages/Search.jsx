@@ -32,7 +32,7 @@ export default function Search() {
         aria-label="Free-text search"
       />
       <div className="search-layout">
-        <aside className="search-filters">
+        <aside className="search-filters card">
           <MultiSelectFilter
             label="Country"
             options={countriesInUse.length > 0 ? countriesInUse : vocab.countries}
@@ -79,7 +79,7 @@ export default function Search() {
         <div className="search-results">
           <p className="result-count">{results.length} profile(s) found</p>
           {results.length === 0 && allProfiles.length === 0 && (
-            <p className="empty-state">No profiles are published on this demonstration yet.</p>
+            <p className="note-card empty-state">No profiles are published on this demonstration yet.</p>
           )}
           <div className="profile-card-grid">
             {results.map((p) => (

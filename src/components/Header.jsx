@@ -1,7 +1,8 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
 
 const links = [
-  { to: '/', label: 'About', end: true },
+  { to: '/', label: 'Home', end: true },
+  { to: '/about', label: 'About' },
   { to: '/search', label: 'Search' },
   { to: '/map', label: 'Map' },
   { to: '/overview', label: 'Overview' },
@@ -13,7 +14,9 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="site-header-top">
-        <span className="brand">ES Community Knowledge Infrastructure</span>
+        <Link to="/" className="brand">
+          ES Community Knowledge Infrastructure
+        </Link>
         <nav className="site-nav">
           {links.map((l) => (
             <NavLink key={l.to} to={l.to} end={l.end} className={({ isActive }) => (isActive ? 'active' : '')}>

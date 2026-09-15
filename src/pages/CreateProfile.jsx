@@ -170,6 +170,7 @@ export default function CreateProfile() {
         <strong>Export profile</strong> to download a validated JSON file to send to JO.
       </p>
 
+      <div className="card form-section">
       <h2>Person</h2>
       <TextField label="Name" status="Required" value={form.name} onChange={set('name')} />
       <SelectField
@@ -194,6 +195,9 @@ export default function CreateProfile() {
         options={vocab.languages}
       />
 
+      </div>
+
+      <div className="card form-section">
       <h2>Location</h2>
       <TextField label="Institution" status="Recommended" value={form.institution} onChange={set('institution')} help="ROR identifier where available" />
       <TextField
@@ -207,6 +211,9 @@ export default function CreateProfile() {
       <TextField label="City" status="Optional" value={form.city} onChange={set('city')} help="Base location for the map" />
       <SelectField label="Country" status="Required" value={form.country} onChange={set('country')} options={vocab.countries} />
 
+      </div>
+
+      <div className="card form-section">
       <h2>Links and identifiers</h2>
       <p className="form-field-help">All optional; ORCID recommended.</p>
       <TextField label="ORCID iD" status="Recommended" value={form.orcid} onChange={set('orcid')} placeholder="0000-0000-0000-0000" />
@@ -215,6 +222,9 @@ export default function CreateProfile() {
       <TextField label="LinkedIn" status="Optional" value={form.linkedin_url} onChange={set('linkedin_url')} placeholder="https://www.linkedin.com/in/..." />
       <TextField label="Website" status="Optional" value={form.website_url} onChange={set('website_url')} placeholder="https://..." />
 
+      </div>
+
+      <div className="card form-section">
       <h2>Expertise</h2>
       <MultiCheckField
         label="ES topics / services"
@@ -256,6 +266,9 @@ export default function CreateProfile() {
         help="Up to ~6, comma-separated"
       />
 
+      </div>
+
+      <div className="card form-section">
       <h2>Work</h2>
       <TextAreaField label="Current projects and ideas" status="Optional" value={form.current_projects} onChange={set('current_projects')} />
       <fieldset className="form-field">
@@ -305,6 +318,9 @@ export default function CreateProfile() {
         </span>
       </fieldset>
 
+      </div>
+
+      <div className="card form-section">
       <h2>Collaboration</h2>
       <MultiCheckField label="Open to" status="Optional" value={form.open_to} onChange={set('open_to')} options={vocab.open_to} />
       <SelectField
@@ -316,6 +332,9 @@ export default function CreateProfile() {
       />
       <TextAreaField label="Offering / seeking" status="Optional" value={form.offering_seeking} onChange={set('offering_seeking')} />
 
+      </div>
+
+      <div className="card form-section">
       <h2>Contact and visibility</h2>
       <TextField
         label="Preferred contact"
@@ -345,6 +364,7 @@ export default function CreateProfile() {
         </div>
         <span className="form-field-help">Only &quot;public&quot; can be exported from this demonstration.</span>
       </fieldset>
+      </div>
 
       {exportErrors.length > 0 && (
         <div className="export-errors">

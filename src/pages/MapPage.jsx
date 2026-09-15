@@ -49,51 +49,53 @@ export default function MapPage() {
   return (
     <section className="page page-map">
       <h1>Map</h1>
-      <div className="map-controls">
-        <label>
-          <input type="checkbox" checked={showBase} onChange={() => setShowBase((v) => !v)} />
-          Layer 1: where members are based
-        </label>
-        <label>
-          <input type="checkbox" checked={showStudyAreas} onChange={() => setShowStudyAreas((v) => !v)} />
-          Layer 2: study areas
-        </label>
-      </div>
-      {showStudyAreas && (
-        <div className="map-layer2-filters">
-          <fieldset className="filter-group">
-            <legend>Ecosystem type</legend>
-            <div className="filter-options">
-              {vocab.ecosystem_focus.map((opt) => (
-                <label key={opt} className="filter-option">
-                  <input
-                    type="checkbox"
-                    checked={ecosystemFilter.includes(opt)}
-                    onChange={() => toggle(ecosystemFilter, setEcosystemFilter, opt)}
-                  />
-                  {opt}
-                </label>
-              ))}
-            </div>
-          </fieldset>
-          <fieldset className="filter-group">
-            <legend>Region</legend>
-            <div className="filter-options">
-              {regionOptions.map((opt) => (
-                <label key={opt} className="filter-option">
-                  <input
-                    type="checkbox"
-                    checked={regionFilter.includes(opt)}
-                    onChange={() => toggle(regionFilter, setRegionFilter, opt)}
-                  />
-                  {opt}
-                </label>
-              ))}
-              {regionOptions.length === 0 && <span className="empty-state">No study areas with coordinates yet.</span>}
-            </div>
-          </fieldset>
+      <div className="card">
+        <div className="map-controls">
+          <label>
+            <input type="checkbox" checked={showBase} onChange={() => setShowBase((v) => !v)} />
+            Layer 1: where members are based
+          </label>
+          <label>
+            <input type="checkbox" checked={showStudyAreas} onChange={() => setShowStudyAreas((v) => !v)} />
+            Layer 2: study areas
+          </label>
         </div>
-      )}
+        {showStudyAreas && (
+          <div className="map-layer2-filters">
+            <fieldset className="filter-group">
+              <legend>Ecosystem type</legend>
+              <div className="filter-options">
+                {vocab.ecosystem_focus.map((opt) => (
+                  <label key={opt} className="filter-option">
+                    <input
+                      type="checkbox"
+                      checked={ecosystemFilter.includes(opt)}
+                      onChange={() => toggle(ecosystemFilter, setEcosystemFilter, opt)}
+                    />
+                    {opt}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+            <fieldset className="filter-group">
+              <legend>Region</legend>
+              <div className="filter-options">
+                {regionOptions.map((opt) => (
+                  <label key={opt} className="filter-option">
+                    <input
+                      type="checkbox"
+                      checked={regionFilter.includes(opt)}
+                      onChange={() => toggle(regionFilter, setRegionFilter, opt)}
+                    />
+                    {opt}
+                  </label>
+                ))}
+                {regionOptions.length === 0 && <span className="empty-state">No study areas with coordinates yet.</span>}
+              </div>
+            </fieldset>
+          </div>
+        )}
+      </div>
 
       <MapContainer center={[20, 10]} zoom={2} className="leaflet-map" scrollWheelZoom={true}>
         <TileLayer

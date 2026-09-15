@@ -62,21 +62,21 @@ export default function Profile() {
       {profile._preview && <p className="preview-badge">Preview &mdash; this session only, not saved anywhere.</p>}
       <h1>{profile.name}</h1>
 
-      <dl className="profile-group">
+      <dl className="profile-group card">
         <h2>Person</h2>
         <Field label="Career stage" value={profile.career_stage} />
         <Field label="Affiliation type" value={profile.affiliation_type} />
         <Field label="Languages" value={profile.languages} />
       </dl>
 
-      <dl className="profile-group">
+      <dl className="profile-group card">
         <h2>Location</h2>
         <Field label="Institution" value={profile.institution} />
         <Field label="City" value={profile.city} />
         <Field label="Country" value={profile.country} />
       </dl>
 
-      <dl className="profile-group">
+      <dl className="profile-group card">
         <h2>Links and identifiers</h2>
         <LinkField label="ORCID iD" href={profile.orcid ? `https://orcid.org/${profile.orcid}` : null}>
           {profile.orcid}
@@ -87,7 +87,7 @@ export default function Profile() {
         <LinkField label="Website" href={profile.website_url} />
       </dl>
 
-      <dl className="profile-group">
+      <dl className="profile-group card">
         <h2>Expertise</h2>
         <Field label="ES topics / services" value={profile.es_topics} />
         <Field
@@ -103,7 +103,7 @@ export default function Profile() {
         <Field label="Keywords" value={profile.keywords} />
       </dl>
 
-      <dl className="profile-group">
+      <dl className="profile-group card">
         <h2>Work</h2>
         <Field label="Current projects and ideas" value={profile.current_projects} />
         {profile.study_areas?.length > 0 && (
@@ -123,14 +123,14 @@ export default function Profile() {
         )}
       </dl>
 
-      <dl className="profile-group">
+      <dl className="profile-group card">
         <h2>Collaboration</h2>
         <Field label="Open to" value={profile.open_to} />
         <Field label="Availability status" value={profile.availability_status} />
         <Field label="Offering / seeking" value={profile.offering_seeking} />
       </dl>
 
-      <dl className="profile-group">
+      <dl className="profile-group card">
         <h2>Contact and visibility</h2>
         {contactBlock}
       </dl>

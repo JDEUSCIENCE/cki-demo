@@ -23,7 +23,7 @@ export default function About() {
         Demonstration. Profiles are the paper&rsquo;s authors, shown with their consent.
       </p>
       {!hasRealProfiles && (
-        <p className="empty-state">
+        <p className="note-card empty-state">
           The profiles file is currently empty. No member profiles have been published on this
           demonstration site yet.
         </p>

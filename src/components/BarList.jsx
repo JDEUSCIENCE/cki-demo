@@ -5,7 +5,7 @@ export default function BarList({ title, counts }) {
   const max = entries.length > 0 ? entries[0][1] : 1
 
   return (
-    <div className="bar-list">
+    <div className="bar-list card">
       <h3>{title}</h3>
       {entries.length === 0 && <p className="empty-state">No data yet.</p>}
       <ul>

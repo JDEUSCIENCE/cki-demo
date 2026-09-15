@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import Header from './components/Header.jsx'
+import Landing from './pages/Landing.jsx'
 import About from './pages/About.jsx'
 import Search from './pages/Search.jsx'
 import Profile from './pages/Profile.jsx'
@@ -14,7 +15,8 @@ export default function App() {
       <Header />
       <main className="app-main">
         <Routes>
-          <Route path="/" element={<About />} />
+          <Route path="/" element={<Landing />} />
+          <Route path="/about" element={<About />} />
           <Route path="/search" element={<Search />} />
           <Route path="/profile/:id" element={<Profile />} />
           <Route path="/map" element={<MapPage />} />
