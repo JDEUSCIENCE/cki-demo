@@ -1,0 +1,104 @@
+name: Build, validate and deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout cki-demo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Check vocabularies against Table S1
+        run: python scripts/check_vocab.py
+
+      # Read-only fine-grained token, scoped to cki-demo-profiles only, stored as the
+      # PROFILES_TOKEN repository secret (JO creates both the private repo and the token).
+      # Optional so this workflow still deploys an empty-profiles site before either exists.
+      - name: Checkout cki-demo-profiles (private)
+        if: ${{ secrets.PROFILES_TOKEN != '' }}
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/cki-demo-profiles
+          token: ${{ secrets.PROFILES_TOKEN }}
+          path: profiles-src
+
+      - name: Assemble data/profiles.json
+        run: |
+          if [ -d profiles-src ] && [ -n "$(ls -A profiles-src/*.json 2>/dev/null)" ]; then
+            python scripts/build_profiles_index.py profiles-src --out data/profiles.json
+          else
+            echo "[]" > data/profiles.json
+            echo "No private profiles repository available yet; deploying with an empty profiles file."
+          fi
+
+      - name: Validate assembled profiles against the public schema
+        run: |
+          if [ "$(python -c 'import json;print(len(json.load(open("data/profiles.json"))))')" != "0" ]; then
+            python - << 'PY'
+          import json, subprocess, sys
+          profiles = json.load(open("data/profiles.json"))
+          import tempfile, os
+          ok = True
+          for i, p in enumerate(profiles):
+              with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+                  json.dump(p, f)
+                  path = f.name
+              result = subprocess.run([sys.executable, "scripts/validate_profiles.py", "--schema", "public", path])
+              os.unlink(path)
+              if result.returncode != 0:
+                  ok = False
+          sys.exit(0 if ok else 1)
+          PY
+          else
+            echo "No profiles to validate."
+          fi
+
+      - name: Build site
+        run: npm run build
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

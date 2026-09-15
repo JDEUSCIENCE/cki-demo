@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+__pycache__/
+.venv/
+
+# Source materials for building this demo (unpublished manuscript, spec docx/pdf, build brief).
+# Not part of the code deliverable; kept locally only, not pushed to the public repo.
+*.docx
+*.pdf
+CLAUDE_BRIEF_*.md

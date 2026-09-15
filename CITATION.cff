@@ -1,0 +1,47 @@
+cff-version: 1.2.0
+message: >-
+  If you use this demonstration site or its build pipeline, please cite the
+  profile specification and the accompanying paper. This file citing the code
+  repository itself is placeholder metadata until the paper is published.
+title: >-
+  cki-demo: a demonstration site for the ES Community Knowledge
+  Infrastructure profile specification
+type: software
+authors:
+  - given-names: João
+    family-names: David
+    affiliation: Humboldt-Universität zu Berlin, Geography Department, Landscape Ecology Lab
+license: MIT
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.21357644
+    description: >-
+      Profile specification (Profile_Specification, v1.1) this demonstration
+      implements. Placeholder until JO confirms the DOI resolves.
+preferred-citation:
+  type: article
+  title: >-
+    Beyond the conference room: A Knowledge Infrastructure for Ecosystem
+    Services Research Community
+  authors:
+    - given-names: João
+      family-names: David
+    - given-names: Vince
+      family-names: van 't Hoff
+    - given-names: Carlotta
+      family-names: Quagliolo
+    - given-names: Luiz
+      family-names: Filho
+    - given-names: Ina M.
+      family-names: Sieber
+    - given-names: Rahul
+      family-names: Yadav
+    - given-names: Victoria
+      family-names: Yavorskaya
+    - given-names: Kiên
+      family-names: Pham
+    - given-names: Milena
+      family-names: Sokolova
+  notes: >-
+    Journal, volume, pages and DOI are placeholders until the paper is
+    published.

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/cki-demo/schemas/profile-submission.schema.json",
+  "title": "CKI profile — member submission",
+  "description": "Exactly what a member can export from the Create a profile form (\"Export profile\" button). No administrative or build-added keys (consent_date, base_location) are allowed here. Enum lists here check structure only; membership in the full controlled vocabularies (including countries, languages and es_topics) is checked separately by scripts/validate_profiles.py against data/vocabularies.json, which is the single source of truth for those lists.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "career_stage", "country", "es_topics", "contact_visibility"],
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "career_stage": { "type": "string", "minLength": 1 },
+    "affiliation_type": { "type": "string", "minLength": 1 },
+    "languages": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "institution": { "type": "string", "minLength": 1 },
+    "ror_id": {
+      "type": "string",
+      "pattern": "^https://ror\\.org/[0-9a-hj-km-np-tv-z]{9}$"
+    },
+    "city": { "type": "string", "minLength": 1 },
+    "country": { "type": "string", "minLength": 1 },
+    "orcid": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$"
+    },
+    "researchgate_url": { "type": "string", "format": "uri", "pattern": "^https?://" },
+    "scopus_id": { "type": "string", "minLength": 1 },
+    "linkedin_url": { "type": "string", "format": "uri", "pattern": "^https?://" },
+    "website_url": { "type": "string", "format": "uri", "pattern": "^https?://" },
+    "es_topics": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "methods": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "methods_other": { "type": "string", "minLength": 1 },
+    "ecosystem_focus": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "sectors": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "keywords": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "maxItems": 6,
+      "uniqueItems": true
+    },
+    "current_projects": { "type": "string", "minLength": 1 },
+    "study_areas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["region", "ecosystem_type"],
+        "properties": {
+          "region": { "type": "string", "minLength": 1 },
+          "ecosystem_type": { "type": "string", "minLength": 1 },
+          "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+          "lon": { "type": "number", "minimum": -180, "maximum": 180 }
+        },
+        "dependentRequired": { "lat": ["lon"], "lon": ["lat"] }
+      }
+    },
+    "open_to": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "availability_status": { "type": "string", "minLength": 1 },
+    "offering_seeking": { "type": "string", "minLength": 1 },
+    "preferred_contact": { "type": "string", "minLength": 1 },
+    "contact_visibility": {
+      "const": "public",
+      "description": "Only \"public\" can be exported from this public demonstration, stated next to the field in the form."
+    }
+  }
+}
