@@ -63,26 +63,7 @@ jobs:
           fi
 
       - name: Validate assembled profiles against the public schema
-        run: |
-          if [ "$(python -c 'import json;print(len(json.load(open("data/profiles.json"))))')" != "0" ]; then
-            python - << 'PY'
-          import json, subprocess, sys
-          profiles = json.load(open("data/profiles.json"))
-          import tempfile, os
-          ok = True
-          for i, p in enumerate(profiles):
-              with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
-                  json.dump(p, f)
-                  path = f.name
-              result = subprocess.run([sys.executable, "scripts/validate_profiles.py", "--schema", "public", path])
-              os.unlink(path)
-              if result.returncode != 0:
-                  ok = False
-          sys.exit(0 if ok else 1)
-          PY
-          else
-            echo "No profiles to validate."
-          fi
+        run: python scripts/validate_public_file.py data/profiles.json
 
       - name: Build site
         run: npm run build
