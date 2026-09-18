@@ -1,4 +1,5 @@
 import { NavLink, Link } from 'react-router-dom'
+import ThemeToggle from './ThemeToggle.jsx'
 
 const links = [
   { to: '/', label: 'Home', end: true },
@@ -23,6 +24,7 @@ export default function Header() {
               {l.label}
             </NavLink>
           ))}
+          <ThemeToggle />
         </nav>
       </div>
       <div className="demo-banner">

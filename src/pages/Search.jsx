@@ -23,16 +23,18 @@ export default function Search() {
   return (
     <section className="page page-search">
       <h1>Search</h1>
-      <input
-        type="search"
-        className="free-text-search"
-        placeholder="Search name, institution, keywords, projects, offering / seeking..."
-        value={freeText}
-        onChange={(e) => setFreeText(e.target.value)}
-        aria-label="Free-text search"
-      />
+      <div className="search-box-wrap">
+        <input
+          type="search"
+          className="free-text-search"
+          placeholder="Search name, institution, keywords, projects, offering / seeking..."
+          value={freeText}
+          onChange={(e) => setFreeText(e.target.value)}
+          aria-label="Free-text search"
+        />
+      </div>
       <div className="search-layout">
-        <aside className="search-filters card">
+        <aside className="search-filters">
           <MultiSelectFilter
             label="Country"
             options={countriesInUse.length > 0 ? countriesInUse : vocab.countries}

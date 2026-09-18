@@ -1,25 +1,45 @@
 :root {
-  /* One accent colour for the whole interface. The map's own layer colours
-     (#0072B2 / #E69F00) and the Overview bar lists' Okabe-Ito palette are
-     spec-mandated and set directly in MapPage.jsx / BarList.jsx, not here. */
-  --color-text: #1a1a1a;
+  /* Light theme (default). Dark overrides below under [data-theme="dark"].
+     One accent hue throughout: #0072B2. In dark mode, plain text/links using
+     the accent are lightened slightly for contrast against a dark background;
+     solid accent fills (buttons, the Required badge) stay exactly #0072B2 in
+     both themes, since white text sits on them either way.
+     The map's own layer colours (#0072B2 / #E69F00) and the Overview bar
+     lists' Okabe-Ito palette are spec-mandated and set directly in
+     MapPage.jsx / BarList.jsx, independent of this theme system. */
   --color-bg: #ffffff;
-  --color-muted: #545454;
-  --color-border: #d6d6d6;
-  --color-border-strong: #b7b7b7;
-  --color-surface: #f7f7f7;
+  --color-surface: #f7f8f9;
+  --color-text: #16181d;
+  --color-muted: #5b6169;
+  --color-border: #e1e4e8;
+  --color-border-strong: #c7cbd1;
   --color-accent: #0072B2;
+  --color-accent-text: #0072B2;
   --color-accent-contrast: #ffffff;
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 1rem;
-  --space-4: 1.5rem;
-  --space-5: 2.5rem;
+  --space-4: 1.75rem;
+  --space-5: 3rem;
 
   --radius: 6px;
 
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --color-bg: #14171b;
+  --color-surface: #1c2025;
+  --color-text: #eef0f2;
+  --color-muted: #a4aab2;
+  --color-border: #2b3036;
+  --color-border-strong: #3c424a;
+  --color-accent: #0072B2;
+  --color-accent-text: #5cb2e0;
+  --color-accent-contrast: #ffffff;
+  color-scheme: dark;
 }
 
 * {
@@ -37,13 +57,14 @@ body {
 }
 
 a {
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 
 .app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background: var(--color-bg);
 }
 
 /* Header */
@@ -58,6 +79,8 @@ a {
   justify-content: space-between;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .brand {
@@ -68,12 +91,13 @@ a {
 }
 
 .brand:hover {
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 
 .site-nav {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--space-1) var(--space-4);
 }
 
@@ -90,6 +114,23 @@ a {
   border-bottom-color: var(--color-accent);
 }
 
+.theme-toggle {
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius);
+  padding: 0.3rem 0.75rem;
+  cursor: pointer;
+  line-height: 1.2;
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent-text);
+}
+
 .demo-banner {
   background: var(--color-surface);
   border-top: 1px solid var(--color-border);
@@ -101,8 +142,8 @@ a {
 /* Layout */
 .app-main {
   flex: 1;
-  padding: var(--space-4) var(--space-4) var(--space-5);
-  max-width: 1100px;
+  padding: var(--space-5) var(--space-4);
+  max-width: 1200px;
   width: 100%;
   margin: 0 auto;
 }
@@ -112,13 +153,16 @@ a {
   font-size: 1rem;
   color: var(--color-muted);
   border-top: 1px solid var(--color-border);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 h1 {
-  font-size: 1.75rem;
-  margin: 0 0 var(--space-4);
-  padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--color-border);
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 var(--space-5);
+  letter-spacing: -0.01em;
 }
 
 h2 {
@@ -130,7 +174,7 @@ h2:first-child {
   margin-top: 0;
 }
 
-/* Cards: the one recurring container style used across every page */
+/* Cards: the one recurring container style, a light border and nothing else */
 .card {
   background: var(--color-bg);
   border: 1px solid var(--color-border);
@@ -161,14 +205,14 @@ h2:first-child {
 
 /* Landing */
 .page-landing h1 {
-  border-bottom: none;
-  padding-bottom: 0;
+  margin-bottom: var(--space-3);
 }
 
 .landing-lead {
   font-size: 1.125rem;
+  color: var(--color-muted);
   max-width: 46rem;
-  margin: 0 0 var(--space-4);
+  margin: 0 0 var(--space-5);
 }
 
 .landing-actions {
@@ -184,7 +228,8 @@ h2:first-child {
 .btn-secondary {
   display: inline-block;
   font-size: 1rem;
-  padding: 0.6rem 1.25rem;
+  font-family: inherit;
+  padding: 0.65rem 1.5rem;
   border-radius: var(--radius);
   border: 1px solid var(--color-border-strong);
   background: var(--color-bg);
@@ -210,7 +255,7 @@ h2:first-child {
 .btn-add:hover,
 .btn-remove:hover {
   border-color: var(--color-accent);
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 
 .form-actions {
@@ -225,20 +270,29 @@ h2:first-child {
   margin-top: var(--space-4);
 }
 
-/* Search */
+/* Search: a large, centred search box, then a calm filter column beside results */
+.search-box-wrap {
+  margin: 0 0 var(--space-5);
+}
+
 .free-text-search {
+  display: block;
   width: 100%;
-  padding: 0.65rem 0.85rem;
-  font-size: 1rem;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0.9rem 1.1rem;
+  font-size: 1.125rem;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-bg);
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius);
-  margin-bottom: var(--space-4);
 }
 
 .search-layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: var(--space-4);
+  grid-template-columns: 260px 1fr;
+  gap: var(--space-5);
   align-items: start;
 }
 
@@ -248,13 +302,21 @@ h2:first-child {
   }
 }
 
+.search-filters {
+  display: flex;
+  flex-direction: column;
+}
+
 .filter-group {
   border: none;
-  padding: 0;
-  margin: 0 0 var(--space-4);
+  padding: 0 0 var(--space-3);
+  margin: 0 0 var(--space-3);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .filter-group:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
   margin-bottom: 0;
 }
 
@@ -263,12 +325,13 @@ h2:first-child {
   font-size: 1rem;
   margin-bottom: var(--space-2);
   padding: 0;
+  color: var(--color-text);
 }
 
 .filter-options {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-2);
   max-height: 180px;
   overflow-y: auto;
   padding-right: var(--space-1);
@@ -279,12 +342,14 @@ h2:first-child {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  color: var(--color-text);
 }
 
 .result-count {
   font-weight: 600;
   margin: 0 0 var(--space-3);
   font-size: 1rem;
+  color: var(--color-muted);
 }
 
 .profile-card-grid {
@@ -300,6 +365,7 @@ h2:first-child {
   padding: var(--space-3);
   text-decoration: none;
   color: var(--color-text);
+  background: var(--color-bg);
 }
 
 .profile-card:hover {
@@ -348,7 +414,6 @@ h2:first-child {
   font-size: 1rem;
 }
 
-.profile-group dl:last-child .profile-field:last-child,
 .profile-field:last-child {
   border-bottom: none;
 }
@@ -547,6 +612,8 @@ h2:first-child {
   border-radius: var(--radius);
   font-size: 1rem;
   font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-bg);
 }
 
 .export-errors {
