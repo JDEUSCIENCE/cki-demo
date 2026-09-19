@@ -26,7 +26,7 @@ export default function Header() {
         </nav>
       </div>
       <div className="demo-banner">
-        Demonstration. A demonstration of the profile specification.
+        Demonstration of the profile specification.
       </div>
     </header>
   )
