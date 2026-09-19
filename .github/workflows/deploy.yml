@@ -44,14 +44,18 @@ jobs:
       # Read-only fine-grained token, scoped to cki-demo-profiles only, stored as the
       # PROFILES_TOKEN repository secret (JO creates both the private repo and the token).
       # Optional so this workflow still deploys an empty-profiles site before either exists.
+      # `if:` can't reference `secrets` directly (GitHub Actions restriction) -- routed
+      # through a step-level env var instead, the documented workaround.
       - name: Checkout cki-demo-profiles (private)
-        if: ${{ secrets.PROFILES_TOKEN != '' }}
+        if: ${{ env.PROFILES_TOKEN != '' }}
         continue-on-error: true
         uses: actions/checkout@v4
         with:
           repository: ${{ github.repository_owner }}/cki-demo-profiles
           token: ${{ secrets.PROFILES_TOKEN }}
           path: profiles-src
+        env:
+          PROFILES_TOKEN: ${{ secrets.PROFILES_TOKEN }}
 
       - name: Assemble data/profiles.json
         run: |
