@@ -26,11 +26,15 @@ Recommended / Optional) and controlled vocabulary in this app:
 
 - `data/vocabularies.json` holds every controlled list, copied word for word
   from Table S1, plus ISO 3166 countries, ISO 639-1 languages and the CICES
-  v5.1 Group-level ES topics list (see below). `scripts/check_vocab.py`
-  checks the eight Table-S1-sourced lists against the specification on every
-  build.
+  v5.1 ES topics list (see below). `scripts/check_vocab.py` checks the five
+  Table-S1-sourced lists that are still verbatim against the specification,
+  plus career_stage, ecosystem_focus, sectors, es_topics, work_scale and
+  project_stage against their own JO-authorised lists, on every build.
 - `src/pages/CreateProfile.jsx` renders all 24 fields in Table S1 order with
-  their status label next to each field name.
+  their status label next to each field name, plus two optional fields JO
+  added beyond Table S1 — Work scale, in the Expertise group right after
+  Ecosystem / realm focus, and Project stage, in the Work group right after
+  Current projects and ideas.
 - `src/pages/Profile.jsx` displays only populated fields, grouped the same
   way, with the contact-visibility rules from the brief (`public` shows
   preferred contact, `members only` shows "visible to members", `hidden`
@@ -42,16 +46,31 @@ Recommended / Optional) and controlled vocabulary in this app:
 
 ### ES topics: CICES v5.1
 
-The ES topics controlled list is the 40 Group-level categories of CICES
-v5.1, extracted from the official spreadsheet
+The ES topics controlled list was revised by JO on 2026-09 from the 40
+Group-level categories to a curated 63-class subset (Class level, one below
+Group) of CICES v5.1, extracted from the official spreadsheet
 (`Finalised-V5.1_18032018.xlsx`, cices.eu -> Resources -> Archive ->
-"Version 5.1 Spreadsheet"), never typed from memory. Nine group names recur
-identically across the Biotic and Abiotic halves of the classification (five
-"Other" groups, two "Mediation of nuisances of anthropogenic origin", two
-"Regulation of baseline flows and extreme events"); those nine are suffixed
-with their Section (e.g. `Other — Cultural (Abiotic)`) so every stored value
-is unique. Section and Division are kept on each entry for grouping in the
-filter UI. All other group names are verbatim.
+"Version 5.1 Spreadsheet"), never typed from memory or invented. It keeps
+every Provisioning, Regulation & Maintenance and Cultural class from the
+Biotic half, plus only the four water-supply classes from Provisioning
+(Abiotic) — drinking and non-drinking water, surface and ground; it drops
+every other abiotic class (energy, minerals, and all of Regulation &
+Maintenance (Abiotic) and Cultural (Abiotic)). See
+`scripts/check_vocab.py`'s `ES_TOPICS_CANONICAL` for the exact list.
+
+Each entry keeps its official CICES `code` and `class` name — the
+stored/exported value for a selection is `"<code> <class>"`, which stays
+unique even for the three same-named "Other" catch-all classes — plus a
+`section` (Provisioning / Regulation and maintenance / Cultural, the three
+top-level CICES sections, Biotic and Abiotic merged) and a JO-authorised
+`label`: a short plain-language phrase shown in the UI instead of the
+official class name, never stored in its place.
+
+`src/components/EsTopicsField.jsx` is the one searchable, grouped
+multi-select built from this list — a search box filtering by label across
+all 63 classes, and the three sections as expandable headers underneath.
+It's used identically in the Create-a-profile form and the Search filter,
+both reading `data/vocabularies.json` via `src/lib/vocab.js`.
 
 ### Languages
 
@@ -69,8 +88,13 @@ languages, via the `pycountry` package used to generate the vocabulary).
    `cities15000`, population >= 15,000, © GeoNames, CC BY 4.0 — see
    https://www.geonames.org/).
 2. institution against `data/ror_lookup.json` (empty until JO approves
-   entries), or the public ROR API when the profile itself supplies a
-   `ror_id`. Never an automatic name match.
+   entries), or a `ror_id` when the profile itself supplies one -- resolved
+   against the ~330-institution offline subset in `data/ror_institutions.json`
+   first, falling back to the public ROR API only for a `ror_id` outside that
+   subset. Never an automatic name match. The Create-a-profile page's
+   Institution field suggests from this same bundled subset and attaches the
+   `ror_id` automatically when a suggestion is picked; the form never asks for
+   a ROR ID directly.
 3. `data/country_centroids.json`, a committed table built from each
    country's capital-city coordinates in the same GeoNames cut (used as a
    practical stand-in for a true polygon centroid, which would need a
@@ -141,6 +165,11 @@ copies (search engine caches, etc.) — see the privacy notice.
 - Site text and the profile specification: CC BY 4.0 [JO to confirm].
 - `data/gazetteer_cities.json` and `data/country_centroids.json`: derived
   from GeoNames (https://www.geonames.org/), CC BY 4.0.
+- `data/ror_institutions.json`: a curated ~330-institution subset (major
+  research universities across regions, plus research institutes and
+  agencies relevant to ecosystem services work) resolved against the public
+  ROR API (https://ror.org, ROR data is CC0). Not the full ROR dataset —
+  regenerate from a longer curated name list if a wider subset is needed.
 - Profile data: not licensed for reuse. All rights stay with each author,
   shown only with their consent.
 

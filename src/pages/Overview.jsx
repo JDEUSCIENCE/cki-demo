@@ -25,7 +25,7 @@ export default function Overview() {
 
   return (
     <section className="page page-overview">
-      <h1>Overview</h1>
+      <h1>Members overview</h1>
       <p className="result-count">{allProfiles.length} profile(s) in this browser session</p>
       <div className="overview-grid">
         <BarList title="By ecosystem focus" counts={byEcosystem} />

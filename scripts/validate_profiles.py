@@ -29,6 +29,7 @@ VOCAB_FIELDS_SINGLE = {
     "career_stage": "career_stage",
     "affiliation_type": "affiliation_type",
     "country": "countries",
+    "project_stage": "project_stage",
     "availability_status": "availability_status",
     "contact_visibility": "contact_visibility",
 }
@@ -36,6 +37,7 @@ VOCAB_FIELDS_MULTI = {
     "languages": "languages",
     "methods": "methods",
     "ecosystem_focus": "ecosystem_focus",
+    "work_scale": "work_scale",
     "sectors": "sectors",
     "open_to": "open_to",
 }
@@ -46,8 +48,9 @@ def load_vocab():
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def es_topic_names(vocab):
-    return {g["group"] for g in vocab["es_topics"]}
+def es_topic_values(vocab):
+    # The stored/exported value is "<code> <class>" -- see esTopicValue in src/lib/vocab.js.
+    return {f"{c['code']} {c['class']}" for c in vocab["es_topics"]}
 
 
 def find_emails(node, path="$"):
@@ -66,7 +69,7 @@ def find_emails(node, path="$"):
 
 def check_vocab_membership(profile, vocab):
     errors = []
-    es_names = es_topic_names(vocab)
+    es_values = es_topic_values(vocab)
 
     for field, vocab_key in VOCAB_FIELDS_SINGLE.items():
         if field in profile and profile[field] not in vocab[vocab_key]:
@@ -80,12 +83,15 @@ def check_vocab_membership(profile, vocab):
                 errors.append(f"'{field}' contains values outside the controlled list '{vocab_key}': {bad}")
 
     if "es_topics" in profile:
-        bad = [v for v in profile["es_topics"] if v not in es_names]
+        bad = [v for v in profile["es_topics"] if v not in es_values]
         if bad:
-            errors.append(f"'es_topics' contains values outside the CICES v5.1 Group list: {bad}")
+            errors.append(f"'es_topics' contains values outside the curated CICES v5.1 class list: {bad}")
 
     if "methods" in profile and "other" not in profile["methods"] and "methods_other" in profile:
         errors.append("'methods_other' is set but 'methods' does not contain \"other\"")
+
+    if "career_stage_other" in profile and profile.get("career_stage") != "other (please specify)":
+        errors.append("'career_stage_other' is set but 'career_stage' is not \"other (please specify)\"")
 
     for i, sa in enumerate(profile.get("study_areas", [])):
         et = sa.get("ecosystem_type")

@@ -10,3 +10,8 @@ __pycache__/
 *.docx
 *.pdf
 CLAUDE_BRIEF_*.md
+
+# Local-only visual QA fixtures (e.g. fake placeholder profiles for design review).
+# Structurally impossible to commit -- belt and braces on top of removing them by hand.
+*.local.js
+*.local.jsx

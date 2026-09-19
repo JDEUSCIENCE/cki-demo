@@ -44,8 +44,15 @@ export function validateForExport(profile) {
   const errors = []
   if (!profile.name) errors.push('Name is required.')
   if (!profile.career_stage) errors.push('Career stage is required.')
-  if (!profile.country) errors.push('Country is required.')
-  if (!profile.es_topics || profile.es_topics.length === 0) errors.push('At least one ES topic / service is required.')
+  if (!profile.country) errors.push('Country where based is required.')
+  if (!profile.es_topics || profile.es_topics.length === 0) errors.push('At least one "ES topics / services" entry is required.')
+  // A recognised institution (picked from the autocomplete list, so ror_id is set and has
+  // coordinates) is enough on its own. Without one -- no institution, or a free-text
+  // institution that was never picked from the list -- a city is required so the profile
+  // can still be placed on the map. Country alone is too coarse (only a country centroid).
+  if (!profile.ror_id && !profile.city) {
+    errors.push('Add a city so you can be shown on the map.')
+  }
   if (profile.contact_visibility !== 'public') {
     errors.push('Only "public" contact visibility can be exported in this demonstration.')
   }

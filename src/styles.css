@@ -1,14 +1,15 @@
 :root {
   /* Light theme (default). Dark overrides below under [data-theme="dark"].
-     One accent hue throughout: #0072B2. In dark mode, plain text/links using
-     the accent are lightened slightly for contrast against a dark background;
-     solid accent fills (buttons, the Required badge) stay exactly #0072B2 in
-     both themes, since white text sits on them either way.
-     The map's own layer colours (#0072B2 / #E69F00) and the Overview bar
-     lists' Okabe-Ito palette are spec-mandated and set directly in
-     MapPage.jsx / BarList.jsx, independent of this theme system. */
+     Soft grey page background, white cards/header -- the research-software-directory.org
+     / OpenAlex feel. One accent hue throughout: #0072B2. In dark mode, plain text/links
+     using the accent are lightened slightly for contrast against the dark background;
+     solid accent fills (buttons, the Required badge, Overview bars) stay exactly #0072B2
+     in both themes, since white text (or nothing) sits on top either way.
+     The map's own layer colours (#0072B2 / #E69F00) are spec-mandated and set directly
+     in MapPage.jsx, independent of this theme system. */
+  --color-page-bg: #f3f4f6;
   --color-bg: #ffffff;
-  --color-surface: #f7f8f9;
+  --color-surface: #eef0f2;
   --color-text: #16181d;
   --color-muted: #5b6169;
   --color-border: #e1e4e8;
@@ -20,25 +21,31 @@
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 1rem;
-  --space-4: 1.75rem;
-  --space-5: 3rem;
+  --space-4: 2rem;
+  --space-5: 3.5rem;
+  --space-6: 4.5rem;
 
-  --radius: 6px;
+  --radius: 8px;
+  /* Subtle lift for cards only (search results, profile sections, overview) --
+     everything else (buttons, inputs, header) stays flat with a border only. */
+  --shadow-card: 0 1px 2px rgba(16, 24, 32, 0.05), 0 4px 12px rgba(16, 24, 32, 0.06);
 
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color-scheme: light;
 }
 
 :root[data-theme='dark'] {
-  --color-bg: #14171b;
-  --color-surface: #1c2025;
+  --color-page-bg: #0f1114;
+  --color-bg: #1a1d22;
+  --color-surface: #23272e;
   --color-text: #eef0f2;
   --color-muted: #a4aab2;
-  --color-border: #2b3036;
-  --color-border-strong: #3c424a;
+  --color-border: #2c3038;
+  --color-border-strong: #3d434c;
   --color-accent: #0072B2;
   --color-accent-text: #5cb2e0;
   --color-accent-contrast: #ffffff;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 14px rgba(0, 0, 0, 0.3);
   color-scheme: dark;
 }
 
@@ -50,10 +57,10 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: var(--color-bg);
+  background: var(--color-page-bg);
   color: var(--color-text);
   font-size: 16px;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 a {
@@ -64,11 +71,12 @@ a {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: var(--color-bg);
+  background: var(--color-page-bg);
 }
 
-/* Header */
+/* Header: white bar on the grey page, like a floating top-level card */
 .site-header {
+  background: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -79,15 +87,27 @@ a {
   justify-content: space-between;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
 }
 
 .brand {
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
   font-size: 1.125rem;
   color: var(--color-text);
   text-decoration: none;
+}
+
+.brand::before {
+  content: '';
+  display: inline-block;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  background: var(--color-accent);
 }
 
 .brand:hover {
@@ -115,13 +135,14 @@ a {
 }
 
 .theme-toggle {
-  font-size: 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
   font-family: inherit;
   color: var(--color-text);
   background: var(--color-bg);
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius);
-  padding: 0.3rem 0.75rem;
+  padding: 0.35rem 0.85rem;
   cursor: pointer;
   line-height: 1.2;
 }
@@ -142,31 +163,47 @@ a {
 /* Layout */
 .app-main {
   flex: 1;
-  padding: var(--space-5) var(--space-4);
-  max-width: 1200px;
+  padding: var(--space-6) var(--space-4);
+  max-width: 1280px;
   width: 100%;
   margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .app-main {
+    padding: var(--space-5) var(--space-3);
+  }
+}
+
+.app-main-home {
+  padding-top: 0.75rem;
 }
 
 .app-footer {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-4);
   font-size: 1rem;
   color: var(--color-muted);
   border-top: 1px solid var(--color-border);
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   width: 100%;
 }
 
+.app-footer-sep {
+  margin: 0 var(--space-2);
+}
+
 h1 {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.25rem;
+  font-weight: 600;
   margin: 0 0 var(--space-5);
   letter-spacing: -0.01em;
+  line-height: 1.15;
 }
 
 h2 {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
+  font-weight: 600;
   margin: var(--space-4) 0 var(--space-3);
 }
 
@@ -174,17 +211,18 @@ h2:first-child {
   margin-top: 0;
 }
 
-/* Cards: the one recurring container style, a light border and nothing else */
+/* Cards: white on the grey page, a light border, a subtle lift */
 .card {
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: var(--space-4);
   margin-bottom: var(--space-4);
+  box-shadow: var(--shadow-card);
 }
 
 .note-card {
-  background: var(--color-surface);
+  background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-left: 3px solid var(--color-accent);
   border-radius: var(--radius);
@@ -203,22 +241,67 @@ h2:first-child {
   font-style: italic;
 }
 
-/* Landing */
+/* Landing: text column left, map preview right; About spans both, full width, below */
+.landing-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+@media (max-width: 820px) {
+  .landing-hero-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.landing-hero-text {
+  text-align: left;
+}
+
 .page-landing h1 {
   margin-bottom: var(--space-3);
 }
 
 .landing-lead {
-  font-size: 1.125rem;
+  font-size: 1.1875rem;
   color: var(--color-muted);
-  max-width: 46rem;
-  margin: 0 0 var(--space-5);
+  margin: 0 0 var(--space-4);
 }
 
 .landing-actions {
   display: flex;
-  gap: var(--space-3);
+  align-items: center;
+  gap: var(--space-4);
   flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}
+
+.landing-disclaimer {
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+.landing-map-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.landing-tertiary-link {
+  font-size: 0.9375rem;
+}
+
+.landing-about {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.landing-about h2 {
+  margin-top: 0;
 }
 
 /* Buttons: filled accent for the primary action, outlined neutral for the secondary one */
@@ -228,8 +311,9 @@ h2:first-child {
 .btn-secondary {
   display: inline-block;
   font-size: 1rem;
+  font-weight: 600;
   font-family: inherit;
-  padding: 0.65rem 1.5rem;
+  padding: 0.75rem 1.75rem;
   border-radius: var(--radius);
   border: 1px solid var(--color-border-strong);
   background: var(--color-bg);
@@ -280,7 +364,7 @@ h2:first-child {
   width: 100%;
   max-width: 640px;
   margin: 0 auto;
-  padding: 0.9rem 1.1rem;
+  padding: 1rem 1.25rem;
   font-size: 1.125rem;
   font-family: inherit;
   color: var(--color-text);
@@ -291,8 +375,8 @@ h2:first-child {
 
 .search-layout {
   display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: var(--space-5);
+  grid-template-columns: 200px 1fr;
+  gap: var(--space-4);
   align-items: start;
 }
 
@@ -354,27 +438,39 @@ h2:first-child {
 
 .profile-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-4);
 }
 
 .profile-card {
   display: block;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  padding: var(--space-3);
-  text-decoration: none;
+  padding: var(--space-4);
   color: var(--color-text);
   background: var(--color-bg);
+  box-shadow: var(--shadow-card);
 }
 
 .profile-card:hover {
   border-color: var(--color-accent);
 }
 
+/* Only the name is a link -- everything else in the card is plain text. */
+.profile-card-name-link {
+  display: inline-block;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.profile-card-name-link:hover h3 {
+  text-decoration: underline;
+}
+
 .profile-card h3 {
   margin: 0 0 var(--space-1);
-  font-size: 1.0625rem;
+  font-size: 1.3125rem;
+  font-weight: 700;
 }
 
 .profile-card-meta {
@@ -387,6 +483,7 @@ h2:first-child {
 .profile-card-open-to {
   font-size: 1rem;
   margin: var(--space-1) 0;
+  color: var(--color-muted);
 }
 
 .preview-badge {
@@ -401,6 +498,12 @@ h2:first-child {
 }
 
 /* Profile page */
+.profile-updated {
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+  margin: 0 0 var(--space-4);
+}
+
 .profile-group {
   margin: 0;
 }
@@ -461,6 +564,43 @@ h2:first-child {
   border-radius: var(--radius);
 }
 
+.leaflet-map-compact {
+  height: 340px;
+}
+
+.map-legend {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  z-index: 1000;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.4rem 0.6rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: #16181d;
+  box-shadow: var(--shadow-card);
+  pointer-events: none;
+}
+
+.map-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.map-legend-item + .map-legend-item {
+  margin-top: 0.2rem;
+}
+
+.map-legend-dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  flex: none;
+}
+
 /* Overview */
 .overview-grid {
   display: grid;
@@ -470,6 +610,7 @@ h2:first-child {
 
 .bar-list h3 {
   font-size: 1.0625rem;
+  font-weight: 600;
   margin: 0 0 var(--space-3);
 }
 
@@ -480,18 +621,21 @@ h2:first-child {
 }
 
 .bar-list li {
-  display: grid;
-  grid-template-columns: 130px 1fr 2.25rem;
-  align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
   font-size: 1rem;
 }
 
 .bar-list-label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: block;
+  margin-bottom: var(--space-1);
+  overflow-wrap: break-word;
+}
+
+.bar-list-row {
+  display: grid;
+  grid-template-columns: 1fr 2.25rem;
+  align-items: center;
+  gap: var(--space-2);
 }
 
 .bar-list-track {
@@ -504,6 +648,7 @@ h2:first-child {
 .bar-list-fill {
   display: block;
   height: 100%;
+  background: var(--color-accent);
 }
 
 .bar-list-count {
@@ -550,7 +695,7 @@ h2:first-child {
 .form-field input[type='search'],
 .form-field select,
 .form-field textarea {
-  padding: 0.55rem;
+  padding: 0.6rem 0.7rem;
   font-size: 1rem;
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius);
@@ -564,6 +709,101 @@ h2:first-child {
 .form-field-help {
   font-size: 1rem;
   color: var(--color-muted);
+}
+
+.field-autocomplete {
+  position: relative;
+  max-width: 480px;
+}
+
+.field-autocomplete-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin: 0.25rem 0 0;
+  padding: 0.25rem;
+  list-style: none;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.field-autocomplete-list button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.4rem 0.5rem;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.field-autocomplete-list button:hover,
+.field-autocomplete-list button:focus {
+  background: var(--color-surface);
+}
+
+.field-autocomplete-meta {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.es-topics-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 480px;
+}
+
+.es-topics-search {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius);
+}
+
+.es-topics-section {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.es-topics-section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: none;
+  cursor: pointer;
+}
+
+.es-topics-section-toggle {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  width: 1em;
+}
+
+.es-topics-section .filter-options {
+  padding: var(--space-2) 0.75rem;
 }
 
 /* Status labels: weight and border carry the meaning, not extra hues */
@@ -617,6 +857,7 @@ h2:first-child {
 }
 
 .export-errors {
+  background: var(--color-bg);
   border: 1px solid var(--color-border-strong);
   border-left: 3px solid var(--color-text);
   padding: var(--space-3);

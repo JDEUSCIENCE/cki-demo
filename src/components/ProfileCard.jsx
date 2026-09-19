@@ -2,8 +2,10 @@ import { Link } from 'react-router-dom'
 
 export default function ProfileCard({ profile }) {
   return (
-    <Link to={`/profile/${profile.id}`} className="profile-card">
-      <h3>{profile.name}</h3>
+    <div className="profile-card">
+      <Link to={`/profile/${profile.id}`} className="profile-card-name-link">
+        <h3>{profile.name}</h3>
+      </Link>
       <p className="profile-card-meta">
         {[profile.career_stage, profile.institution, profile.country].filter(Boolean).join(' · ')}
       </p>
@@ -14,6 +16,6 @@ export default function ProfileCard({ profile }) {
         <p className="profile-card-open-to">Open to: {profile.open_to.join(', ')}</p>
       )}
       {profile._preview && <span className="preview-badge">Preview (this session only)</span>}
-    </Link>
+    </div>
   )
 }

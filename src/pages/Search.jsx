@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react'
 import { useProfiles } from '../lib/ProfilesContext.jsx'
 import { filterProfiles, emptyFilters } from '../lib/filterProfiles.js'
-import { vocab, esTopicGroups } from '../lib/vocab.js'
+import { vocab } from '../lib/vocab.js'
 import MultiSelectFilter from '../components/MultiSelectFilter.jsx'
+import EsTopicsField from '../components/EsTopicsField.jsx'
 import ProfileCard from '../components/ProfileCard.jsx'
 
 export default function Search() {
@@ -14,7 +15,6 @@ export default function Search() {
 
   const setFilter = (key) => (values) => setFilters((f) => ({ ...f, [key]: values }))
 
-  const esTopicNames = esTopicGroups.map((g) => g.group)
   const countriesInUse = useMemo(
     () => Array.from(new Set(allProfiles.map((p) => p.country).filter(Boolean))).sort(),
     [allProfiles],
@@ -36,7 +36,7 @@ export default function Search() {
       <div className="search-layout">
         <aside className="search-filters">
           <MultiSelectFilter
-            label="Country"
+            label="Country where based"
             options={countriesInUse.length > 0 ? countriesInUse : vocab.countries}
             selected={filters.country}
             onChange={setFilter('country')}
@@ -47,12 +47,10 @@ export default function Search() {
             selected={filters.career_stage}
             onChange={setFilter('career_stage')}
           />
-          <MultiSelectFilter
-            label="ES topics"
-            options={esTopicNames}
-            selected={filters.es_topics}
-            onChange={setFilter('es_topics')}
-          />
+          <fieldset className="filter-group">
+            <legend>ES topics / services</legend>
+            <EsTopicsField value={filters.es_topics} onChange={setFilter('es_topics')} />
+          </fieldset>
           <MultiSelectFilter
             label="Methods"
             options={vocab.methods}
@@ -64,6 +62,18 @@ export default function Search() {
             options={vocab.ecosystem_focus}
             selected={filters.ecosystem_focus}
             onChange={setFilter('ecosystem_focus')}
+          />
+          <MultiSelectFilter
+            label="Work scale"
+            options={vocab.work_scale}
+            selected={filters.work_scale}
+            onChange={setFilter('work_scale')}
+          />
+          <MultiSelectFilter
+            label="Sectors / application domains"
+            options={vocab.sectors}
+            selected={filters.sectors}
+            onChange={setFilter('sectors')}
           />
           <MultiSelectFilter
             label="Open to"

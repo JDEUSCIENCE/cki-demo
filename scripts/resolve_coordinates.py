@@ -8,9 +8,12 @@ Order (per the build brief):
      JO-approved data/ror_lookup.json. Never an automatic ROR name match.
   3. both fail -> data/country_centroids.json (a committed table keyed by country).
 
-All lookups are local/deterministic except an explicit ror_id, which is resolved
-via the public ROR API (https://api.ror.org) -- this still runs only in the build,
-never on the live site.
+Step 2 is local/deterministic whenever ror_id is one of the ~330 institutions bundled
+in data/ror_institutions.json (the same offline dataset the Create-a-profile page's
+institution autocomplete suggests from -- see src/components/InstitutionAutocomplete.jsx).
+Only a ror_id outside that bundled subset (typed by hand into an exported profile, since
+the form itself never exposes a raw ror_id field) falls back to a live lookup against the
+public ROR API (https://api.ror.org) -- still only at build time, never on the live site.
 
 This module exposes resolve_base_location(profile, data_dir) -> dict | None so it
 can be imported by scripts/build_profiles_index.py, and can also be run directly
@@ -62,10 +65,19 @@ def _ror_api_lookup(ror_id):
     return None
 
 
+def _bundled_ror_lookup(ror_id, data_dir):
+    ror_id = ror_id.rstrip("/")
+    bundled = _load_json(data_dir / "ror_institutions.json")
+    for entry in bundled:
+        if entry["ror_id"].rstrip("/") == ror_id:
+            return {"lat": entry["lat"], "lon": entry["lon"], "source": "ror"}
+    return None
+
+
 def _ror_lookup(profile, data_dir):
     ror_id = profile.get("ror_id")
     if ror_id:
-        result = _ror_api_lookup(ror_id)
+        result = _bundled_ror_lookup(ror_id, data_dir) or _ror_api_lookup(ror_id)
         if result:
             return result
 

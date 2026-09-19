@@ -1,12 +1,22 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProfiles } from '../lib/ProfilesContext.jsx'
-import { vocab, esTopicGroups } from '../lib/vocab.js'
+import { vocab } from '../lib/vocab.js'
 import { buildSubmissionObject, validateForExport } from '../lib/exportValidation.js'
+import CityAutocomplete from '../components/CityAutocomplete.jsx'
+import InstitutionAutocomplete from '../components/InstitutionAutocomplete.jsx'
+import EsTopicsField from '../components/EsTopicsField.jsx'
+
+const CAREER_STAGE_OTHER = 'other (please specify)'
+
+function todayDateString() {
+  return new Date().toISOString().slice(0, 10)
+}
 
 const initialForm = {
   name: '',
   career_stage: '',
+  career_stage_other: '',
   affiliation_type: '',
   languages: [],
   institution: '',
@@ -22,9 +32,11 @@ const initialForm = {
   methods: [],
   methods_other: '',
   ecosystem_focus: [],
+  work_scale: [],
   sectors: [],
   keywords: [],
   current_projects: '',
+  project_stage: '',
   study_areas: [],
   open_to: [],
   availability_status: '',
@@ -61,7 +73,7 @@ function TextAreaField({ label, status, value, onChange, help }) {
   )
 }
 
-function SelectField({ label, status, value, onChange, options }) {
+function SelectField({ label, status, value, onChange, options, help }) {
   return (
     <label className="form-field">
       <span className="form-field-label">
@@ -75,6 +87,7 @@ function SelectField({ label, status, value, onChange, options }) {
           </option>
         ))}
       </select>
+      {help && <span className="form-field-help">{help}</span>}
     </label>
   )
 }
@@ -110,6 +123,13 @@ export default function CreateProfile() {
 
   const set = (key) => (value) => setForm((f) => ({ ...f, [key]: value }))
 
+  const setCareerStage = (value) =>
+    setForm((f) => ({
+      ...f,
+      career_stage: value,
+      career_stage_other: value === CAREER_STAGE_OTHER ? f.career_stage_other : '',
+    }))
+
   const setStudyArea = (index, patch) => {
     setForm((f) => {
       const study_areas = f.study_areas.map((sa, i) => (i === index ? { ...sa, ...patch } : sa))
@@ -132,17 +152,15 @@ export default function CreateProfile() {
         .slice(0, 6),
     }))
 
-  const esTopicNames = esTopicGroups.map((g) => g.group)
-
   const handlePreview = () => {
-    const submission = buildSubmissionObject(form)
+    const submission = buildSubmissionObject({ ...form, updated: todayDateString() })
     const id = addPreviewProfile(submission)
     setPreviewId(id)
     navigate(`/profile/${id}`)
   }
 
   const handleExport = () => {
-    const submission = buildSubmissionObject(form)
+    const submission = buildSubmissionObject({ ...form, updated: todayDateString() })
     const { valid, errors } = validateForExport(submission)
     if (!valid) {
       setExportErrors(errors)
@@ -177,9 +195,17 @@ export default function CreateProfile() {
         label="Career stage"
         status="Required"
         value={form.career_stage}
-        onChange={set('career_stage')}
+        onChange={setCareerStage}
         options={vocab.career_stage}
       />
+      {form.career_stage === CAREER_STAGE_OTHER && (
+        <TextField
+          label="Career stage — please specify"
+          status="Optional"
+          value={form.career_stage_other}
+          onChange={set('career_stage_other')}
+        />
+      )}
       <SelectField
         label="Affiliation type"
         status="Optional"
@@ -199,17 +225,38 @@ export default function CreateProfile() {
 
       <div className="card form-section">
       <h2>Location</h2>
-      <TextField label="Institution" status="Recommended" value={form.institution} onChange={set('institution')} help="ROR identifier where available" />
-      <TextField
-        label="ROR identifier"
-        status="Optional"
-        value={form.ror_id}
-        onChange={set('ror_id')}
-        placeholder="https://ror.org/0abcdefg1"
-        help="Part of the Institution field, used to resolve the map location."
+      <label className="form-field">
+        <span className="form-field-label">
+          Institution <StatusLabel status="Recommended" />
+        </span>
+        <InstitutionAutocomplete
+          value={form.institution}
+          onChange={(text) => setForm((f) => ({ ...f, institution: text, ror_id: '' }))}
+          onPick={(inst) => setForm((f) => ({ ...f, institution: inst.name, ror_id: inst.ror_id }))}
+          help="Start typing for suggestions from a bundled list of major universities and research institutes. Picking one links it automatically; otherwise just type the name as free text."
+        />
+      </label>
+      <label className="form-field">
+        <span className="form-field-label">
+          City <StatusLabel status={form.ror_id ? 'Optional' : 'Required'} />
+        </span>
+        <CityAutocomplete
+          value={form.city}
+          onChange={set('city')}
+          help={
+            form.ror_id
+              ? 'Base location for the map. Start typing for suggestions from the bundled city list.'
+              : 'Needed for the map, since no recognised institution was picked above. Start typing for suggestions from the bundled city list.'
+          }
+        />
+      </label>
+      <SelectField
+        label="Country where based"
+        status="Required"
+        value={form.country}
+        onChange={set('country')}
+        options={vocab.countries}
       />
-      <TextField label="City" status="Optional" value={form.city} onChange={set('city')} help="Base location for the map" />
-      <SelectField label="Country" status="Required" value={form.country} onChange={set('country')} options={vocab.countries} />
 
       </div>
 
@@ -226,14 +273,16 @@ export default function CreateProfile() {
 
       <div className="card form-section">
       <h2>Expertise</h2>
-      <MultiCheckField
-        label="ES topics / services"
-        status="Required"
-        value={form.es_topics}
-        onChange={set('es_topics')}
-        options={esTopicNames}
-        help="CICES v5.1, Group level"
-      />
+      <fieldset className="form-field">
+        <legend className="form-field-label">
+          ES topics / services <StatusLabel status="Required" />
+        </legend>
+        <EsTopicsField
+          value={form.es_topics}
+          onChange={set('es_topics')}
+          help="CICES v5.1 classes, curated subset. Search or expand a section, then tick."
+        />
+      </fieldset>
       <MultiCheckField
         label="Methods / approaches"
         status="Recommended"
@@ -245,11 +294,19 @@ export default function CreateProfile() {
         <TextField label="Methods — other, free text" status="Optional" value={form.methods_other} onChange={set('methods_other')} />
       )}
       <MultiCheckField
-        label="Ecosystem / realm focus"
+        label="Ecosystem focus"
         status="Recommended"
         value={form.ecosystem_focus}
         onChange={set('ecosystem_focus')}
         options={vocab.ecosystem_focus}
+      />
+      <MultiCheckField
+        label="Work scale"
+        status="Optional"
+        value={form.work_scale}
+        onChange={set('work_scale')}
+        options={vocab.work_scale}
+        help="The spatial scale you work at."
       />
       <MultiCheckField
         label="Sectors / application domains"
@@ -271,6 +328,14 @@ export default function CreateProfile() {
       <div className="card form-section">
       <h2>Work</h2>
       <TextAreaField label="Current projects and ideas" status="Optional" value={form.current_projects} onChange={set('current_projects')} />
+      <SelectField
+        label="Project stage"
+        status="Optional"
+        value={form.project_stage}
+        onChange={set('project_stage')}
+        options={vocab.project_stage}
+        help="The stage of your current work, so others know if it's open to join."
+      />
       <fieldset className="form-field">
         <legend className="form-field-label">
           Study areas <StatusLabel status="Optional" />

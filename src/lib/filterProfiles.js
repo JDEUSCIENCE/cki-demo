@@ -19,7 +19,7 @@ function matchesFreeText(profile, query) {
   })
 }
 
-// filters: { country: [], career_stage: [], es_topics: [], methods: [], ecosystem_focus: [], open_to: [], availability_status: [] }
+// filters: { country: [], career_stage: [], es_topics: [], methods: [], ecosystem_focus: [], work_scale: [], sectors: [], open_to: [], availability_status: [] }
 export function filterProfiles(profiles, filters, freeText) {
   return profiles.filter((p) => {
     if (!matchesMulti(p.country, filters.country)) return false
@@ -27,6 +27,8 @@ export function filterProfiles(profiles, filters, freeText) {
     if (!matchesMulti(p.es_topics, filters.es_topics)) return false
     if (!matchesMulti(p.methods, filters.methods)) return false
     if (!matchesMulti(p.ecosystem_focus, filters.ecosystem_focus)) return false
+    if (!matchesMulti(p.work_scale, filters.work_scale)) return false
+    if (!matchesMulti(p.sectors, filters.sectors)) return false
     if (!matchesMulti(p.open_to, filters.open_to)) return false
     if (!matchesMulti(p.availability_status, filters.availability_status)) return false
     if (!matchesFreeText(p, freeText)) return false
@@ -40,6 +42,8 @@ export const emptyFilters = {
   es_topics: [],
   methods: [],
   ecosystem_focus: [],
+  work_scale: [],
+  sectors: [],
   open_to: [],
   availability_status: [],
 }

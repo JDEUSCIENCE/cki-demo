@@ -1,14 +1,14 @@
 {
-  "_source_note": "Career stage, affiliation type, methods, ecosystem focus, sectors, open to, availability status and contact visibility are copied word for word from Table S1 (Appendix A of the build brief). Countries are ISO 3166-1 official short names (via the pycountry package). Languages are ISO 639-1 names (the two-letter subset of ISO 639, chosen as the practical list for a working-languages field; pycountry's full ISO 639 table also carries ISO 639-2/3/5 codes for thousands of historical and minority languages not useful in a dropdown). ES topics are CICES v5.1 Group-level names extracted from the official spreadsheet at cices.eu (Finalised-V5.1_18032018.xlsx), never typed from memory. Five \"Other\" groups and two pairs of identically-named Regulation & Maintenance groups recur across the Biotic/Abiotic halves of CICES v5.1; those nine are suffixed with their Section (e.g. \"Other — Cultural (Abiotic)\") so every stored es_topics value is unique. All other group names are verbatim.",
+  "_source_note": "Affiliation type, methods, availability status and contact visibility are copied word for word from Table S1 (Appendix A of the build brief). Career stage was revised by JO on 2026-09 (dropped \"mid-career researcher or professional\", added \"practitioner or professional (non-academic)\", and \"other\" became \"other (please specify)\" with a free-text career_stage_other field) -- it no longer matches Table S1 word for word, deliberately. Ecosystem / realm focus was replaced by JO on 2026-09 with a 16-value biome list (see check_vocab.py ECOSYSTEM_FOCUS_CANONICAL) -- it also no longer matches Table S1, deliberately; this is the single source for that list, used identically by the Create-a-profile field, the Search filter and the Map study-area ecosystem-type filter. The existing dev-seed placeholder profiles still use the old 10-value list and will no longer match this vocabulary until replaced with real profiles. Countries are ISO 3166-1 official short names (via the pycountry package). Languages are ISO 639-1 names (the two-letter subset of ISO 639, chosen as the practical list for a working-languages field; pycountry's full ISO 639 table also carries ISO 639-2/3/5 codes for thousands of historical and minority languages not useful in a dropdown). ES topics were revised by JO on 2026-09 from the 40 CICES v5.1 Group-level names to a curated 63-class subset (Class level, one level below Group), still extracted from the official spreadsheet at cices.eu (Finalised-V5.1_18032018.xlsx), never typed from memory or invented (see check_vocab.py ES_TOPICS_CANONICAL). It keeps every Provisioning and Regulation & Maintenance and Cultural class from the Biotic half, plus only the four water-supply classes from the Abiotic Provisioning half (drinking and non-drinking surface/ground water); it drops all abiotic energy, mineral and 'Other non-aqueous' classes and all Regulation & Maintenance (Abiotic) and Cultural (Abiotic) classes. Each entry keeps its official CICES `code` and `class` name (the stored, exported value is `\"<code> <class>\"`, unique even for the three same-named \"Other\" catch-all classes) plus a JO-authorised `label` -- a short plain-language phrase for display only, never stored in place of the official name. `section` groups entries into the three top-level CICES sections (Provisioning / Regulation and maintenance / Cultural) for the Create-a-profile field's and the Search filter's searchable, expandable-by-section UI (src/components/EsTopicsField.jsx). The existing dev-seed placeholder profiles still use the old 40 Group-level names and will no longer match this vocabulary until replaced with real profiles. work_scale was added by JO on 2026-09 as a new optional Expertise field, not present in Table S1 -- the spatial scale a member works at -- checked as its own canonical list in check_vocab.py, same as career_stage, ecosystem_focus and es_topics. A thematic_focus field (cross-cutting research themes) was added alongside it and then, also on 2026-09, merged into sectors rather than kept separate: sectors is now a 14-value combined list (the original seven Table S1 sectors plus thematic_focus's ten themes, with overlaps such as \"climate adaptation\"/\"climate change adaptation\" and \"disaster risk\"/\"disaster risk reduction\" collapsed to one wording each) -- it is no longer Table S1 verbatim, deliberately, and is checked against its own canonical list like the other revised fields. thematic_focus itself no longer exists as a field. project_stage was added by JO on 2026-09 as a new optional single-select Work field, not present in Table S1 -- the stage of a member's current work (idea/early planning, ongoing, seeking collaborators, or completed), so others know if a project is open to join -- checked as its own canonical list in check_vocab.py. open_to was revised by JO on 2026-09: \"hosting visits / secondments\" became \"hosting visits\" (the word \"secondments\" dropped, nothing else in the list changed) -- it no longer matches Table S1 word for word, deliberately, and is checked against its own canonical list like the other revised fields.",
   "career_stage": [
     "master's student",
     "doctoral candidate",
     "postdoctoral researcher",
     "recent PhD graduate",
     "early-career researcher or professional",
-    "mid-career researcher or professional",
     "senior or established researcher or professional",
-    "other"
+    "practitioner or professional (non-academic)",
+    "other (please specify)"
   ],
   "affiliation_type": [
     "university",
@@ -30,24 +30,45 @@
     "other"
   ],
   "ecosystem_focus": [
-    "urban",
-    "forest",
-    "freshwater",
-    "marine / coastal",
-    "agricultural",
-    "grassland",
-    "mountain",
-    "drylands",
-    "wetlands",
+    "Urban and built-up",
+    "Agricultural and croplands",
+    "Forests (tropical and subtropical)",
+    "Forests (temperate and boreal)",
+    "Grasslands and savannas",
+    "Shrublands and heathlands",
+    "Deserts and semi-deserts",
+    "Polar and alpine",
+    "Rivers and streams",
+    "Lakes and reservoirs",
+    "Wetlands (marshes and swamps)",
+    "Coastal and shorelines",
+    "Estuaries and mangroves",
+    "Marine shelf and reefs",
+    "Open ocean and deep sea",
     "other"
+  ],
+  "work_scale": [
+    "local or neighbourhood",
+    "city or municipal",
+    "regional",
+    "national",
+    "continental",
+    "global"
   ],
   "sectors": [
     "urban planning",
     "agriculture",
-    "water",
+    "water management",
     "conservation",
-    "climate adaptation",
-    "disaster risk",
+    "climate change adaptation",
+    "climate change mitigation",
+    "disaster risk reduction",
+    "biodiversity",
+    "nature-based solutions",
+    "land-use and land-cover change",
+    "green and blue infrastructure",
+    "restoration",
+    "sustainability and wellbeing",
     "other"
   ],
   "open_to": [
@@ -59,8 +80,14 @@
     "co-authoring / proposal writing",
     "reviewing",
     "data or method sharing",
-    "hosting visits / secondments",
+    "hosting visits",
     "teaching / training"
+  ],
+  "project_stage": [
+    "idea or early planning",
+    "ongoing",
+    "seeking collaborators",
+    "completed"
   ],
   "availability_status": [
     "open to new work",
@@ -511,204 +538,382 @@
   ],
   "es_topics": [
     {
-      "section": "Provisioning (Biotic)",
-      "division": "Biomass",
-      "group": "Cultivated terrestrial plants for nutrition, materials or energy"
+      "code": "1.1.1.1",
+      "class": "Cultivated terrestrial plants (including fungi, algae) grown for nutritional purposes",
+      "section": "Provisioning",
+      "label": "Food crops"
     },
     {
-      "section": "Provisioning (Biotic)",
-      "division": "Biomass",
-      "group": "Cultivated aquatic plants for nutrition, materials or energy"
+      "code": "1.1.1.2",
+      "class": "Fibres and other materials from cultivated plants, fungi, algae and bacteria for direct use or processing  (excluding genetic materials)",
+      "section": "Provisioning",
+      "label": "Crop-based fibres and raw materials"
     },
     {
-      "section": "Provisioning (Biotic)",
-      "division": "Biomass",
-      "group": "Reared animals for nutrition, materials or energy"
+      "code": "1.1.1.3",
+      "class": "Cultivated plants (including fungi, algae) grown as a source of  energy",
+      "section": "Provisioning",
+      "label": "Bioenergy crops"
     },
     {
-      "section": "Provisioning (Biotic)",
-      "division": "Biomass",
-      "group": "Reared aquatic animals for nutrition, materials or energy"
+      "code": "1.1.2.1",
+      "class": "Plants cultivated by in- situ aquaculture  grown for nutritional purposes",
+      "section": "Provisioning",
+      "label": "Farmed aquatic plants for food"
     },
     {
-      "section": "Provisioning (Biotic)",
-      "division": "Biomass",
-      "group": "Wild plants (terrestrial and aquatic) for nutrition, materials or energy"
+      "code": "1.1.2.2",
+      "class": "Fibres and other materials from in-situ aquaculture for direct use or processing  (excluding genetic materials)",
+      "section": "Provisioning",
+      "label": "Farmed aquatic plants for materials"
     },
     {
-      "section": "Provisioning (Biotic)",
-      "division": "Biomass",
-      "group": "Wild animals (terrestrial and aquatic) for nutrition, materials or energy"
+      "code": "1.1.2.3",
+      "class": "Plants cultivated by in- situ aquaculture grown as an energy source",
+      "section": "Provisioning",
+      "label": "Farmed aquatic plants for energy"
     },
     {
-      "section": "Provisioning (Biotic)",
-      "division": "Genetic material from all biota (including seed, spore or gamete production)",
-      "group": "Genetic material from plants, algae or fungi"
+      "code": "1.1.3.1",
+      "class": "Animals reared  for nutritional purposes",
+      "section": "Provisioning",
+      "label": "Livestock for food"
     },
     {
-      "section": "Provisioning (Biotic)",
-      "division": "Genetic material from all biota (including seed, spore or gamete production)",
-      "group": "Genetic material from animals"
+      "code": "1.1.3.2",
+      "class": "Fibres and other materials from reared animals for direct use or processing (excluding genetic materials)",
+      "section": "Provisioning",
+      "label": "Livestock-based materials (wool, hides, etc.)"
     },
     {
-      "section": "Provisioning (Biotic)",
-      "division": "Genetic material from all biota (including seed, spore or gamete production)",
-      "group": "Genetic material from organisms"
+      "code": "1.1.3.3",
+      "class": "Animals reared to provide energy (including mechanical)",
+      "section": "Provisioning",
+      "label": "Livestock for energy or draught power"
     },
     {
-      "section": "Provisioning (Biotic)",
-      "division": "Other types of provisioning service from biotic sources",
-      "group": "Other — Provisioning (Biotic)"
+      "code": "1.1.4.1",
+      "class": "Animals reared by in-situ aquaculture for nutritional purposes",
+      "section": "Provisioning",
+      "label": "Farmed fish and shellfish for food"
     },
     {
-      "section": "Regulation & Maintenance (Biotic)",
-      "division": "Transformation of biochemical or physical inputs to ecosystems",
-      "group": "Mediation of wastes or toxic substances of anthropogenic origin by living processes"
+      "code": "1.1.4.2",
+      "class": "Fibres and other materials from animals grown by in-situ aquaculture for direct use or processing  (excluding genetic materials)",
+      "section": "Provisioning",
+      "label": "Farmed fish and shellfish for materials"
     },
     {
-      "section": "Regulation & Maintenance (Biotic)",
-      "division": "Transformation of biochemical or physical inputs to ecosystems",
-      "group": "Mediation of nuisances of anthropogenic origin — Regulation & Maintenance (Biotic)"
+      "code": "1.1.4.3",
+      "class": "Animals reared by in-situ aquaculture as an energy source",
+      "section": "Provisioning",
+      "label": "Farmed aquatic animals for energy"
     },
     {
-      "section": "Regulation & Maintenance (Biotic)",
-      "division": "Regulation of physical, chemical, biological conditions",
-      "group": "Regulation of baseline flows and extreme events — Regulation & Maintenance (Biotic)"
+      "code": "1.1.5.1",
+      "class": "Wild plants (terrestrial and aquatic, including fungi, algae) used for nutrition",
+      "section": "Provisioning",
+      "label": "Wild food plants (foraging)"
     },
     {
-      "section": "Regulation & Maintenance (Biotic)",
-      "division": "Regulation of physical, chemical, biological conditions",
-      "group": "Lifecycle maintenance, habitat and gene pool protection"
+      "code": "1.1.5.2",
+      "class": "Fibres and other materials from wild plants for direct use or processing  (excluding genetic materials)",
+      "section": "Provisioning",
+      "label": "Wild plant materials (foraging)"
     },
     {
-      "section": "Regulation & Maintenance (Biotic)",
-      "division": "Regulation of physical, chemical, biological conditions",
-      "group": "Pest and disease control"
+      "code": "1.1.5.3",
+      "class": "Wild plants (terrestrial and aquatic, including fungi, algae) used as a source of energy",
+      "section": "Provisioning",
+      "label": "Wild plants used as fuel"
     },
     {
-      "section": "Regulation & Maintenance (Biotic)",
-      "division": "Regulation of physical, chemical, biological conditions",
-      "group": "Regulation of soil quality"
+      "code": "1.1.6.1",
+      "class": "Wild animals (terrestrial and aquatic) used for nutritional purposes",
+      "section": "Provisioning",
+      "label": "Wild food and game"
     },
     {
-      "section": "Regulation & Maintenance (Biotic)",
-      "division": "Regulation of physical, chemical, biological conditions",
-      "group": "Water conditions"
+      "code": "1.1.6.2",
+      "class": "Fibres and other materials from wild animals for direct use or processing (excluding genetic materials)",
+      "section": "Provisioning",
+      "label": "Materials from wild animals"
     },
     {
-      "section": "Regulation & Maintenance (Biotic)",
-      "division": "Regulation of physical, chemical, biological conditions",
-      "group": "Atmospheric composition and conditions"
+      "code": "1.1.6.3",
+      "class": "Wild animals (terrestrial and aquatic)  used as a source of energy",
+      "section": "Provisioning",
+      "label": "Wild-animal-based fuel"
     },
     {
-      "section": "Regulation & Maintenance (Biotic)",
-      "division": "Other types of regulation and maintenance service by living processes",
-      "group": "Other — Regulation & Maintenance (Biotic)"
+      "code": "1.2.1.1",
+      "class": "Seeds, spores and other plant materials collected for maintaining or establishing a population",
+      "section": "Provisioning",
+      "label": "Seed and spore collection"
     },
     {
-      "section": "Cultural (Biotic)",
-      "division": "Direct, in-situ and outdoor interactions with living systems that depend on presence in the environmental setting",
-      "group": "Physical and experiential interactions with natural environment"
+      "code": "1.2.1.2",
+      "class": "Higher and lower plants (whole organisms) used to breed new strains or varieties",
+      "section": "Provisioning",
+      "label": "Wild plant stock for breeding new varieties"
     },
     {
-      "section": "Cultural (Biotic)",
-      "division": "Direct, in-situ and outdoor interactions with living systems that depend on presence in the environmental setting",
-      "group": "Intellectual and representative interactions with natural environment"
+      "code": "1.2.1.3",
+      "class": "Individual genes extracted from higher and lower plants for the design and construction of new biological entities",
+      "section": "Provisioning",
+      "label": "Plant genetic resources"
     },
     {
-      "section": "Cultural (Biotic)",
-      "division": "Indirect, remote, often indoor interactions with living systems that do not require presence in the environmental setting",
-      "group": "Spiritual, symbolic and other interactions with natural environment"
+      "code": "1.2.2.1",
+      "class": "Animal material collected for the purposes of maintaining or establishing a population",
+      "section": "Provisioning",
+      "label": "Wild animal stock for restocking populations"
     },
     {
-      "section": "Cultural (Biotic)",
-      "division": "Indirect, remote, often indoor interactions with living systems that do not require presence in the environmental setting",
-      "group": "Other biotic characteristics that have a non-use value"
+      "code": "1.2.2.2",
+      "class": "Wild animals  (whole organisms) used to breed  new strains or varieties",
+      "section": "Provisioning",
+      "label": "Wild animal stock for breeding new varieties"
     },
     {
-      "section": "Cultural (Biotic)",
-      "division": "Other characteristics of living systems that have cultural significance",
-      "group": "Other — Cultural (Biotic)"
+      "code": "1.2.2.3",
+      "class": "Individual genes extracted from organisms  for the design and construction of new biological entities",
+      "section": "Provisioning",
+      "label": "Animal genetic resources"
     },
     {
-      "section": "Provisioning (Abiotic)",
-      "division": "Water",
-      "group": "Surface water used for nutrition, materials or energy"
+      "code": "1.3.X.X",
+      "class": "Other",
+      "section": "Provisioning",
+      "label": "Other provisioning services (biotic, not elsewhere classified)"
     },
     {
-      "section": "Provisioning (Abiotic)",
-      "division": "Water",
-      "group": "Ground water for used for nutrition, materials or energy"
+      "code": "4.2.1.1",
+      "class": "Surface water for drinking",
+      "section": "Provisioning",
+      "label": "Drinking water from rivers and lakes"
     },
     {
-      "section": "Provisioning (Abiotic)",
-      "division": "Water",
-      "group": "Other aqueous ecosystem outputs"
+      "code": "4.2.1.2",
+      "class": "Surface water used as a material (non-drinking purposes)",
+      "section": "Provisioning",
+      "label": "Surface water for irrigation and industry"
     },
     {
-      "section": "Provisioning (Abiotic)",
-      "division": "Non-aqueous natural abiotic ecosystem outputs",
-      "group": "Mineral substances used for nutrition, materials or energy"
+      "code": "4.2.2.1",
+      "class": "Ground (and subsurface) water for drinking",
+      "section": "Provisioning",
+      "label": "Drinking water from groundwater"
     },
     {
-      "section": "Provisioning (Abiotic)",
-      "division": "Non-aqueous natural abiotic ecosystem outputs",
-      "group": "Non-mineral substances or ecosystem properties used for nutrition, materials or energy"
+      "code": "4.2.2.2",
+      "class": "Ground water (and subsurface)  used as a material (non-drinking purposes)",
+      "section": "Provisioning",
+      "label": "Groundwater for irrigation and industry"
     },
     {
-      "section": "Provisioning (Abiotic)",
-      "division": "Non-aqueous natural abiotic ecosystem outputs",
-      "group": "Other mineral or non-mineral substances or ecosystem properties used for nutrition, materials or energy"
+      "code": "2.1.1.1",
+      "class": "Bio-remediation by micro-organisms, algae, plants, and animals",
+      "section": "Regulation and maintenance",
+      "label": "Natural breakdown of pollutants (bioremediation)"
     },
     {
-      "section": "Regulation & Maintenance (Abiotic)",
-      "division": "Transformation of biochemical or physical inputs to ecosystems",
-      "group": "Mediation of waste, toxics and other nuisances by non-living processes"
+      "code": "2.1.1.2",
+      "class": "Filtration/sequestration/storage/accumulation by micro-organisms, algae, plants, and animals",
+      "section": "Regulation and maintenance",
+      "label": "Natural filtering and storage of pollutants"
     },
     {
-      "section": "Regulation & Maintenance (Abiotic)",
-      "division": "Transformation of biochemical or physical inputs to ecosystems",
-      "group": "Mediation of nuisances of anthropogenic origin — Regulation & Maintenance (Abiotic)"
+      "code": "2.1.2.1",
+      "class": "Smell reduction",
+      "section": "Regulation and maintenance",
+      "label": "Odour reduction"
     },
     {
-      "section": "Regulation & Maintenance (Abiotic)",
-      "division": "Regulation of physical, chemical, biological conditions",
-      "group": "Regulation of baseline flows and extreme events — Regulation & Maintenance (Abiotic)"
+      "code": "2.1.2.2",
+      "class": "Noise attenuation",
+      "section": "Regulation and maintenance",
+      "label": "Noise reduction"
     },
     {
-      "section": "Regulation & Maintenance (Abiotic)",
-      "division": "Regulation of physical, chemical, biological conditions",
-      "group": "Maintenance of physical, chemical, abiotic conditions"
+      "code": "2.1.2.3",
+      "class": "Visual screening",
+      "section": "Regulation and maintenance",
+      "label": "Visual screening (blocking unsightly views)"
     },
     {
-      "section": "Regulation & Maintenance (Abiotic)",
-      "division": "Other type of regulation and maintenance service by abiotic processes",
-      "group": "Other — Regulation & Maintenance (Abiotic)"
+      "code": "2.2.1.1",
+      "class": "Control of erosion rates",
+      "section": "Regulation and maintenance",
+      "label": "Erosion control"
     },
     {
-      "section": "Cultural (Abiotic)",
-      "division": "Direct, in-situ and outdoor interactions with natural physical systems that depend on presence in the environmental setting",
-      "group": "Physical and experiential interactions with natural abiotic components of the environment"
+      "code": "2.2.1.2",
+      "class": "Buffering and attenuation of mass movement",
+      "section": "Regulation and maintenance",
+      "label": "Landslide and avalanche protection"
     },
     {
-      "section": "Cultural (Abiotic)",
-      "division": "Direct, in-situ and outdoor interactions with natural physical systems that depend on presence in the environmental setting",
-      "group": "Intellectual and representative interactions with abiotic components of the natural environment"
+      "code": "2.2.1.3",
+      "class": "Hydrological cycle and water flow regulation (Including flood control, and coastal protection)",
+      "section": "Regulation and maintenance",
+      "label": "Flood and water flow regulation"
     },
     {
-      "section": "Cultural (Abiotic)",
-      "division": "Indirect, remote, often indoor interactions with physical systems that do not require presence in the environmental setting",
-      "group": "Spiritual, symbolic and other interactions with the abiotic components of the natural environment"
+      "code": "2.2.1.4",
+      "class": "Wind protection",
+      "section": "Regulation and maintenance",
+      "label": "Wind protection"
     },
     {
-      "section": "Cultural (Abiotic)",
-      "division": "Indirect, remote, often indoor interactions with physical systems that do not require presence in the environmental setting",
-      "group": "Other abiotic characteristics that have a non-use value"
+      "code": "2.2.1.5",
+      "class": "Fire protection",
+      "section": "Regulation and maintenance",
+      "label": "Fire protection"
     },
     {
-      "section": "Cultural (Abiotic)",
-      "division": "Other abiotic characteristics of nature that have cultural significance",
-      "group": "Other — Cultural (Abiotic)"
+      "code": "2.2.2.1",
+      "class": "Pollination (or 'gamete' dispersal in a marine context)",
+      "section": "Regulation and maintenance",
+      "label": "Pollination"
+    },
+    {
+      "code": "2.2.2.2",
+      "class": "Seed dispersal",
+      "section": "Regulation and maintenance",
+      "label": "Seed dispersal"
+    },
+    {
+      "code": "2.2.2.3",
+      "class": "Maintaining nursery populations and habitats (Including gene pool protection)",
+      "section": "Regulation and maintenance",
+      "label": "Habitat and nursery protection"
+    },
+    {
+      "code": "2.2.3.1",
+      "class": "Pest control (including invasive species)",
+      "section": "Regulation and maintenance",
+      "label": "Pest and invasive species control"
+    },
+    {
+      "code": "2.2.3.2",
+      "class": "Disease control",
+      "section": "Regulation and maintenance",
+      "label": "Disease control"
+    },
+    {
+      "code": "2.2.4.1",
+      "class": "Weathering processes and their effect on soil quality",
+      "section": "Regulation and maintenance",
+      "label": "Soil formation"
+    },
+    {
+      "code": "2.2.4.2",
+      "class": "Decomposition and fixing processes and their effect on soil quality",
+      "section": "Regulation and maintenance",
+      "label": "Soil fertility maintenance"
+    },
+    {
+      "code": "2.2.5.1",
+      "class": "Regulation of the chemical condition of freshwaters by living processes",
+      "section": "Regulation and maintenance",
+      "label": "Freshwater quality regulation"
+    },
+    {
+      "code": "2.2.5.2",
+      "class": "Regulation of the chemical condition of salt waters by living processes",
+      "section": "Regulation and maintenance",
+      "label": "Marine water quality regulation"
+    },
+    {
+      "code": "2.2.6.1",
+      "class": "Regulation of chemical composition of atmosphere and oceans",
+      "section": "Regulation and maintenance",
+      "label": "Global climate regulation and carbon sequestration"
+    },
+    {
+      "code": "2.2.6.2",
+      "class": "Regulation of temperature and humidity, including ventilation and transpiration",
+      "section": "Regulation and maintenance",
+      "label": "Local climate regulation (cooling, shade, ventilation)"
+    },
+    {
+      "code": "2.3.X.X",
+      "class": "Other",
+      "section": "Regulation and maintenance",
+      "label": "Other regulating services (biotic, not elsewhere classified)"
+    },
+    {
+      "code": "3.1.1.1",
+      "class": "Characteristics of living systems that that enable activities promoting health, recuperation or enjoyment through active or immersive interactions",
+      "section": "Cultural",
+      "label": "Outdoor recreation and exercise in nature"
+    },
+    {
+      "code": "3.1.1.2",
+      "class": "Characteristics of living systems that enable activities promoting health, recuperation or enjoyment through passive or observational interactions",
+      "section": "Cultural",
+      "label": "Nature watching and relaxation"
+    },
+    {
+      "code": "3.1.2.1",
+      "class": "Characteristics of living systems that enable scientific investigation or the creation of traditional ecological knowledge",
+      "section": "Cultural",
+      "label": "Scientific research and traditional knowledge"
+    },
+    {
+      "code": "3.1.2.2",
+      "class": "Characteristics of living systems that enable education and training",
+      "section": "Cultural",
+      "label": "Environmental education"
+    },
+    {
+      "code": "3.1.2.3",
+      "class": "Characteristics of living systems that are resonant in terms of culture or heritage",
+      "section": "Cultural",
+      "label": "Cultural heritage and identity"
+    },
+    {
+      "code": "3.1.2.4",
+      "class": "Characteristics of living systems that enable aesthetic experiences",
+      "section": "Cultural",
+      "label": "Natural beauty and scenery"
+    },
+    {
+      "code": "3.2.1.1",
+      "class": "Elements of living systems that have symbolic meaning",
+      "section": "Cultural",
+      "label": "Symbolic and emblematic value of nature"
+    },
+    {
+      "code": "3.2.1.2",
+      "class": "Elements of living systems that have sacred or religious meaning",
+      "section": "Cultural",
+      "label": "Spiritual and religious value of nature"
+    },
+    {
+      "code": "3.2.1.3",
+      "class": "Elements of living systems used for entertainment or representation",
+      "section": "Cultural",
+      "label": "Nature in art, film and media"
+    },
+    {
+      "code": "3.2.2.1",
+      "class": "Characteristics or features of living systems that have an existence value",
+      "section": "Cultural",
+      "label": "Existence value (knowing nature exists)"
+    },
+    {
+      "code": "3.2.2.2",
+      "class": "Characteristics or features of living systems that have an option or bequest value",
+      "section": "Cultural",
+      "label": "Value of nature for future generations"
+    },
+    {
+      "code": "3.3.X.X",
+      "class": "Other",
+      "section": "Cultural",
+      "label": "Other cultural services (biotic, not elsewhere classified)"
     }
   ]
 }
