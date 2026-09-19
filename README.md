@@ -19,10 +19,10 @@ profiles.
 
 ## How this maps to Table S1
 
-`Profile_Specification` Table S1 (24 fields, grouped as Person / Location /
-Links and identifiers / Expertise / Work / Collaboration / Contact and
-visibility) is the contract for every field name, status label (Required /
-Recommended / Optional) and controlled vocabulary in this app:
+`Profile_Specification` Table S1 (grouped as Person / Location / Links and
+identifiers / Expertise / Work / Collaboration / Contact and visibility) is
+the contract for every field name, status label (Required / Recommended /
+Optional) and controlled vocabulary in this app:
 
 - `data/vocabularies.json` holds every controlled list, copied word for word
   from Table S1, plus ISO 3166 countries, ISO 639-1 languages and the CICES
@@ -30,11 +30,10 @@ Recommended / Optional) and controlled vocabulary in this app:
   Table-S1-sourced lists that are still verbatim against the specification,
   plus career_stage, ecosystem_focus, sectors, es_topics, work_scale and
   project_stage against their own JO-authorised lists, on every build.
-- `src/pages/CreateProfile.jsx` renders all 24 fields in Table S1 order with
-  their status label next to each field name, plus two optional fields JO
-  added beyond Table S1 — Work scale, in the Expertise group right after
-  Ecosystem / realm focus, and Project stage, in the Work group right after
-  Current projects and ideas.
+- `src/pages/CreateProfile.jsx` renders every field in Table S1 order with
+  their status label next to each field name, including Work scale, in the
+  Expertise group right after Ecosystem / realm focus, and Project stage, in
+  the Work group right after Current projects and ideas.
 - `src/pages/Profile.jsx` displays only populated fields, grouped the same
   way, with the contact-visibility rules from the brief (`public` shows
   preferred contact, `members only` shows "visible to members", `hidden`
