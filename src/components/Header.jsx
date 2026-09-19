@@ -26,7 +26,7 @@ export default function Header() {
         </nav>
       </div>
       <div className="demo-banner">
-        Demonstration. Profiles are the paper&rsquo;s authors, shown with their consent.
+        Demonstration. A demonstration of the profile specification.
       </div>
     </header>
   )
