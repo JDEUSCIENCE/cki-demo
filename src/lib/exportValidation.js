@@ -54,7 +54,7 @@ export function validateForExport(profile) {
     errors.push('Add a city so you can be shown on the map.')
   }
   if (profile.contact_visibility !== 'public') {
-    errors.push('Only "public" contact visibility can be exported in this demonstration.')
+    errors.push('Only "public" contact visibility can be submitted in this demonstration.')
   }
   const emails = findEmails(profile)
   if (emails.length > 0) {

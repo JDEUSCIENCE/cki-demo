@@ -117,7 +117,8 @@ function MultiCheckField({ label, status, value, onChange, options, help }) {
 export default function CreateProfile() {
   const [form, setForm] = useState(initialForm)
   const [previewId, setPreviewId] = useState(null)
-  const [exportErrors, setExportErrors] = useState([])
+  const [submitErrors, setSubmitErrors] = useState([])
+  const [submitted, setSubmitted] = useState(false)
   const { addPreviewProfile } = useProfiles()
   const navigate = useNavigate()
 
@@ -159,33 +160,28 @@ export default function CreateProfile() {
     navigate(`/profile/${id}`)
   }
 
-  const handleExport = () => {
+  const handleSubmit = () => {
     const submission = buildSubmissionObject({ ...form, updated: todayDateString() })
     const { valid, errors } = validateForExport(submission)
     if (!valid) {
-      setExportErrors(errors)
+      setSubmitErrors(errors)
+      setSubmitted(false)
       return
     }
-    setExportErrors([])
-    const blob = new Blob([JSON.stringify(submission, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    const safeName = (form.name || 'profile').toLowerCase().replace(/[^a-z0-9]+/g, '-')
-    a.href = url
-    a.download = `${safeName}-cki-profile.json`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
+    setSubmitErrors([])
+    setSubmitted(true)
   }
 
   return (
     <section className="page page-create">
       <h1>Create a profile</h1>
+      <p className="note-card">
+        This is a demonstration. Profiles are not saved or registered. Filling this form shows how it would work in
+        a real version.
+      </p>
       <p className="form-intro">
-        Nothing here is sent anywhere by the site. Use <strong>Preview</strong> to see the profile as it would
-        appear, added to search and map for this browser session only &mdash; refreshing the page removes it. Use{' '}
-        <strong>Export profile</strong> to download a validated JSON file to send to JO.
+        Use <strong>Preview</strong> to see the profile as it would appear, added to search and map for this browser
+        session only &mdash; refreshing the page removes it.
       </p>
 
       <div className="card form-section">
@@ -427,15 +423,15 @@ export default function CreateProfile() {
             </label>
           ))}
         </div>
-        <span className="form-field-help">Only &quot;public&quot; can be exported from this demonstration.</span>
+        <span className="form-field-help">Only &quot;public&quot; can be submitted from this demonstration.</span>
       </fieldset>
       </div>
 
-      {exportErrors.length > 0 && (
-        <div className="export-errors">
-          <strong>Cannot export:</strong>
+      {submitErrors.length > 0 && (
+        <div className="submit-errors">
+          <strong>Cannot submit:</strong>
           <ul>
-            {exportErrors.map((e) => (
+            {submitErrors.map((e) => (
               <li key={e}>{e}</li>
             ))}
           </ul>
@@ -446,10 +442,16 @@ export default function CreateProfile() {
         <button type="button" onClick={handlePreview} className="btn-primary">
           Preview
         </button>
-        <button type="button" onClick={handleExport} className="btn-secondary">
-          Export profile
+        <button type="button" onClick={handleSubmit} className="btn-secondary">
+          Submit profile
         </button>
       </div>
+      {submitted && (
+        <p className="note-card">
+          Thank you. This is a demonstration, so your profile has not been saved or registered. In a real version,
+          this would add you to the directory.
+        </p>
+      )}
       {previewId && (
         <p className="form-field-help">
           Preview added for this session. It disappears on refresh and is never sent anywhere.
