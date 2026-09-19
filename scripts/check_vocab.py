@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Compare data/vocabularies.json against Table S1 (Appendix A of the build brief), word for word,
-except career_stage, sectors and open_to, which JO deliberately revised away from Table S1 (see
-CAREER_STAGE_CANONICAL, SECTORS_CANONICAL and OPEN_TO_CANONICAL) and are each checked separately
-against their revision instead. ecosystem_focus, es_topics, work_scale and project_stage are
-current Table S1 controlled lists, each checked against its own canonical list in this script
-(ECOSYSTEM_FOCUS_CANONICAL, ES_TOPICS_CANONICAL, WORK_SCALE_CANONICAL, PROJECT_STAGE_CANONICAL).
+using the canonical lists below. affiliation_type, methods, availability_status and
+contact_visibility are checked together against Table S1 verbatim (see CANONICAL); career_stage,
+ecosystem_focus, sectors, es_topics, work_scale, project_stage and open_to are each checked
+separately against their own canonical list (CAREER_STAGE_CANONICAL, ECOSYSTEM_FOCUS_CANONICAL,
+SECTORS_CANONICAL, ES_TOPICS_CANONICAL, WORK_SCALE_CANONICAL, PROJECT_STAGE_CANONICAL,
+OPEN_TO_CANONICAL).
 
 Usage: python scripts/check_vocab.py [path/to/vocabularies.json]
 Exits non-zero and prints the diff if any controlled list does not match exactly (order-independent).
@@ -13,9 +14,9 @@ import json
 import sys
 from pathlib import Path
 
-# Revised by JO on 2026-09: dropped "mid-career researcher or professional", added
-# "practitioner or professional (non-academic)", and "other" became "other (please
-# specify)" with a free-text career_stage_other field. No longer Table S1 verbatim.
+# The current controlled list for career_stage (dropped "mid-career researcher or
+# professional", added "practitioner or professional (non-academic)", and "other" became
+# "other (please specify)" with a free-text career_stage_other field).
 CAREER_STAGE_CANONICAL = [
     "master's student",
     "doctoral candidate",
@@ -69,8 +70,8 @@ PROJECT_STAGE_CANONICAL = [
     "completed",
 ]
 
-# Revised by JO on 2026-09: "hosting visits / secondments" became "hosting visits" (the word
-# "secondments" dropped); nothing else in the list changed. No longer Table S1 verbatim.
+# The current controlled list for open_to: "hosting visits / secondments" became "hosting
+# visits" (the word "secondments" dropped); nothing else in the list changed.
 OPEN_TO_CANONICAL = [
     "collaboration",
     "exchanging ideas",
@@ -84,12 +85,12 @@ OPEN_TO_CANONICAL = [
     "teaching / training",
 ]
 
-# Revised by JO on 2026-09: a thematic_focus field (cross-cutting research themes) was
-# added alongside work_scale and then merged into sectors instead of kept separate. sectors
-# is now the original seven Table S1 sectors plus thematic_focus's ten themes, with
-# overlapping wordings collapsed ("climate adaptation"/"climate change adaptation" ->
-# "climate change adaptation"; "disaster risk"/"disaster risk reduction" -> "disaster risk
-# reduction"). No longer Table S1 verbatim; thematic_focus no longer exists as a field.
+# The current controlled list for sectors. A thematic_focus field (cross-cutting research
+# themes) was added alongside work_scale and then merged into sectors instead of kept
+# separate: sectors is the original seven Table S1 sectors plus thematic_focus's ten
+# themes, with overlapping wordings collapsed ("climate adaptation"/"climate change
+# adaptation" -> "climate change adaptation"; "disaster risk"/"disaster risk reduction" ->
+# "disaster risk reduction"). thematic_focus no longer exists as a field.
 SECTORS_CANONICAL = [
     "urban planning",
     "agriculture",
@@ -224,13 +225,13 @@ def main():
         ok = False
         missing = [v for v in CAREER_STAGE_CANONICAL if v not in actual_career_stage]
         extra = [v for v in actual_career_stage if v not in CAREER_STAGE_CANONICAL]
-        print("FAIL: 'career_stage' does not match the revised career stage list word for word.")
+        print("FAIL: 'career_stage' does not match the canonical career stage list word for word.")
         if missing:
             print(f"  missing: {missing}")
         if extra:
             print(f"  unexpected: {extra}")
     else:
-        print(f"OK: 'career_stage' ({len(actual_career_stage)} values) matches the revised list")
+        print(f"OK: 'career_stage' ({len(actual_career_stage)} values) matches the canonical list")
 
     actual_ecosystem_focus = vocab.get("ecosystem_focus")
     if actual_ecosystem_focus is None:
@@ -288,13 +289,13 @@ def main():
         ok = False
         missing = [v for v in SECTORS_CANONICAL if v not in actual_sectors]
         extra = [v for v in actual_sectors if v not in SECTORS_CANONICAL]
-        print("FAIL: 'sectors' does not match the revised sectors list word for word.")
+        print("FAIL: 'sectors' does not match the canonical sectors list word for word.")
         if missing:
             print(f"  missing: {missing}")
         if extra:
             print(f"  unexpected: {extra}")
     else:
-        print(f"OK: 'sectors' ({len(actual_sectors)} values) matches the revised list")
+        print(f"OK: 'sectors' ({len(actual_sectors)} values) matches the canonical list")
 
     actual_open_to = vocab.get("open_to")
     if actual_open_to is None:
@@ -304,13 +305,13 @@ def main():
         ok = False
         missing = [v for v in OPEN_TO_CANONICAL if v not in actual_open_to]
         extra = [v for v in actual_open_to if v not in OPEN_TO_CANONICAL]
-        print("FAIL: 'open_to' does not match the revised list word for word.")
+        print("FAIL: 'open_to' does not match the canonical list word for word.")
         if missing:
             print(f"  missing: {missing}")
         if extra:
             print(f"  unexpected: {extra}")
     else:
-        print(f"OK: 'open_to' ({len(actual_open_to)} values) matches the revised list")
+        print(f"OK: 'open_to' ({len(actual_open_to)} values) matches the canonical list")
 
     actual_es_topics = vocab.get("es_topics")
     if actual_es_topics is None:
