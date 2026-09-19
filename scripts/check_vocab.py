@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 """Compare data/vocabularies.json against Table S1 (Appendix A of the build brief), word for word,
-except career_stage, ecosystem_focus, sectors and open_to, which JO deliberately revised away from
-Table S1 (see CAREER_STAGE_CANONICAL, ECOSYSTEM_FOCUS_CANONICAL, SECTORS_CANONICAL and
-OPEN_TO_CANONICAL) and are each checked separately against their revision instead. es_topics,
-work_scale and project_stage are not from Table S1 at all -- es_topics is a JO-curated 63-class
-subset of CICES v5.1 (see ES_TOPICS_CANONICAL), and work_scale and project_stage are new optional
-fields JO added outright (see WORK_SCALE_CANONICAL and PROJECT_STAGE_CANONICAL) -- all three
-checked the same way.
+except career_stage, sectors and open_to, which JO deliberately revised away from Table S1 (see
+CAREER_STAGE_CANONICAL, SECTORS_CANONICAL and OPEN_TO_CANONICAL) and are each checked separately
+against their revision instead. ecosystem_focus, es_topics, work_scale and project_stage are
+current Table S1 controlled lists, each checked against its own canonical list in this script
+(ECOSYSTEM_FOCUS_CANONICAL, ES_TOPICS_CANONICAL, WORK_SCALE_CANONICAL, PROJECT_STAGE_CANONICAL).
 
 Usage: python scripts/check_vocab.py [path/to/vocabularies.json]
 Exits non-zero and prints the diff if any controlled list does not match exactly (order-independent).
@@ -29,9 +27,9 @@ CAREER_STAGE_CANONICAL = [
     "other (please specify)",
 ]
 
-# Revised by JO on 2026-09: replaced the Table S1 ecosystem_focus list with a 16-value
-# biome list. No longer Table S1 verbatim. Single source for the Create-a-profile field,
-# the Search filter and the Map study-area ecosystem-type filter.
+# The current controlled list for ecosystem_focus: a 16-value biome list. Single source
+# for the Create-a-profile field, the Search filter and the Map study-area ecosystem-type
+# filter.
 ECOSYSTEM_FOCUS_CANONICAL = [
     "Urban and built-up",
     "Agricultural and croplands",
@@ -51,8 +49,8 @@ ECOSYSTEM_FOCUS_CANONICAL = [
     "other",
 ]
 
-# Added by JO on 2026-09: a new optional Expertise field, not present in Table S1 --
-# the spatial scale a member works at.
+# The current controlled list for work_scale, an optional Expertise field -- the spatial
+# scale a member works at.
 WORK_SCALE_CANONICAL = [
     "local or neighbourhood",
     "city or municipal",
@@ -62,8 +60,8 @@ WORK_SCALE_CANONICAL = [
     "global",
 ]
 
-# Added by JO on 2026-09: a new optional single-select Work field, not present in Table S1
-# -- the stage of a member's current work, so others know if a project is open to join.
+# The current controlled list for project_stage, an optional single-select Work field --
+# the stage of a member's current work, so others know if a project is open to join.
 PROJECT_STAGE_CANONICAL = [
     "idea or early planning",
     "ongoing",
@@ -109,13 +107,13 @@ SECTORS_CANONICAL = [
     "other",
 ]
 
-# Curated by JO on 2026-09: a 63-class subset of the 90 CICES v5.1 classes (Class level,
-# one below Group), extracted from the official spreadsheet (Finalised-V5.1_18032018.xlsx,
-# cices.eu). Keeps every Provisioning/Regulation & Maintenance/Cultural class from the
-# Biotic half, plus only the four water-supply classes from Provisioning (Abiotic); drops
-# all other abiotic classes. Not from Table S1. `label` is a JO-authorised plain-language
-# phrase for display only -- the stored/exported value is "<code> <class>" (see
-# esTopicValue in src/lib/vocab.js), never the label.
+# The current controlled list for es_topics: a 63-class subset of the 90 CICES v5.1 classes
+# (Class level, one below Group), extracted from the official spreadsheet
+# (Finalised-V5.1_18032018.xlsx, cices.eu). Keeps every Provisioning/Regulation &
+# Maintenance/Cultural class from the Biotic half, plus only the four water-supply classes
+# from Provisioning (Abiotic); drops all other abiotic classes. `label` is a JO-authorised
+# plain-language phrase for display only -- the stored/exported value is "<code> <class>"
+# (see esTopicValue in src/lib/vocab.js), never the label.
 ES_TOPICS_CANONICAL = [
     {"code": "1.1.1.1", "class": "Cultivated terrestrial plants (including fungi, algae) grown for nutritional purposes", "section": "Provisioning", "label": "Food crops"},
     {"code": "1.1.1.2", "class": "Fibres and other materials from cultivated plants, fungi, algae and bacteria for direct use or processing  (excluding genetic materials)", "section": "Provisioning", "label": "Crop-based fibres and raw materials"},
@@ -242,13 +240,13 @@ def main():
         ok = False
         missing = [v for v in ECOSYSTEM_FOCUS_CANONICAL if v not in actual_ecosystem_focus]
         extra = [v for v in actual_ecosystem_focus if v not in ECOSYSTEM_FOCUS_CANONICAL]
-        print("FAIL: 'ecosystem_focus' does not match the revised ecosystem focus list word for word.")
+        print("FAIL: 'ecosystem_focus' does not match the canonical ecosystem focus list word for word.")
         if missing:
             print(f"  missing: {missing}")
         if extra:
             print(f"  unexpected: {extra}")
     else:
-        print(f"OK: 'ecosystem_focus' ({len(actual_ecosystem_focus)} values) matches the revised list")
+        print(f"OK: 'ecosystem_focus' ({len(actual_ecosystem_focus)} values) matches the canonical list")
 
     actual_work_scale = vocab.get("work_scale")
     if actual_work_scale is None:
