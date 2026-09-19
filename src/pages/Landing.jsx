@@ -38,8 +38,8 @@ export default function Landing() {
         </p>
         <p>
           Read the paper DOI (available on publication) and the profile specification (
-          <a href="https://doi.org/10.5281/zenodo.21357644" target="_blank" rel="noreferrer">
-            DOI 10.5281/zenodo.21357644, placeholder until confirmed
+          <a href="https://doi.org/10.5281/zenodo.22848663" target="_blank" rel="noreferrer">
+            DOI 10.5281/zenodo.22848663
           </a>
           ).
         </p>

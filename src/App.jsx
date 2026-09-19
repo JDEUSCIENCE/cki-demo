@@ -27,8 +27,8 @@ export default function App() {
         </Routes>
       </main>
       <footer className="app-footer">
-        <a href="https://doi.org/10.5281/zenodo.21357644" target="_blank" rel="noreferrer">
-          Profile specification (DOI, placeholder pending confirmation)
+        <a href="https://doi.org/10.5281/zenodo.22848663" target="_blank" rel="noreferrer">
+          Profile specification (DOI)
         </a>
         <span className="app-footer-sep">&middot;</span>
         <Link to="/privacy">Privacy notice</Link>

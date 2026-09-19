@@ -14,10 +14,10 @@ authors:
 license: MIT
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.21357644
+    value: 10.5281/zenodo.22848663
     description: >-
       Profile specification (Profile_Specification, v1.1) this demonstration
-      implements. Placeholder until JO confirms the DOI resolves.
+      implements.
 preferred-citation:
   type: article
   title: >-
