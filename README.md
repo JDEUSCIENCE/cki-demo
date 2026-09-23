@@ -1,10 +1,10 @@
 # cki-demo
 
 A static demonstration of the ES Community Knowledge Infrastructure profile
-specification (`Profile_Specification`, v1.1), built from the paper *Beyond
-the conference room: A Knowledge Infrastructure for Ecosystem Services
-Research Community*. It implements searchable member profiles and a map, as
-described in that paper's "An early-career space for exchange" section.
+specification (`Profile_Specification`), built from the paper *Beyond the
+conference room: a community knowledge infrastructure for ecosystem services
+researchers*. It implements the searchable member profiles and map described
+in that paper.
 
 This is a demonstration, not a production service: no accounts, no login, no
 server, no data stored anywhere except in this repository and (for real
@@ -151,8 +151,9 @@ Intake, in order:
    (`scripts/build_profiles_index.py`), and writes `data/profiles.json` for
    the build. Any failure stops the deployment.
 
-Profiles are **never archived**: the Zenodo deposit for this project covers
-the code repository only.
+Profiles are **never archived**. The profile specification itself is
+archived on Zenodo (DOI 10.5281/zenodo.22848663); the code repository is not
+separately archived.
 
 Withdrawal: the profile is deleted from `cki-demo-profiles` and the site is
 redeployed within a week. This never guarantees removal from third-party
@@ -161,7 +162,7 @@ copies (search engine caches, etc.) — see the privacy notice.
 ## Licences
 
 - Code (this repository): MIT — see `LICENSE`.
-- Site text and the profile specification: CC BY 4.0 [JO to confirm].
+- Site text and the profile specification: CC BY 4.0.
 - `data/gazetteer_cities.json` and `data/country_centroids.json`: derived
   from GeoNames (https://www.geonames.org/), CC BY 4.0.
 - `data/ror_institutions.json`: a curated ~330-institution subset (major
